@@ -1,13 +1,13 @@
 /*****************************************************************
 *
-* Title: Project 2 RS232 Comunnication handler
-* Authors: James and Ovi and Kevin
-* Purpose: To control the robot
-* Date: March 8, 2016
+* Title:    Project 2 RS232 Comunnication handler
+* Authors:  James and Ovi and Kevin
+* Purpose:  To control the robot
+* Date:     March 8, 2016
 *
 *****************************************************************/
 //INCLUDES
-#include <hidef.h>      /* common defines and macros */
+#include <hidef.h>           /* common defines and macros       */
 #include "derivative.h"      /* derivative-specific definitions */
 #include <limits.h>
 #include "macros.h"
@@ -117,6 +117,13 @@ DCinit();
  
   EnableInterrupts;
   LCDprintf("-- Hi I'm Rob --");
+  
+/****** SETUP ENCODERS ********/
+
+  encodersInit();
+  
+  
+  for(;;)
 
   
 

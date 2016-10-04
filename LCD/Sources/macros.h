@@ -37,11 +37,7 @@ extern int servoFlg;
 #define MAKE_CHNL_IC( chnl )		CLR_BITS( TIOS, 1 << (chnl) )
 
 
-#define CLR_TIMER_CHNL_FLAG( chnl )	TFLG1 = (1 << (chnl))
-
-
-
-
+#define CLR_TIMER_CHNL_FLAG( chnl )	TFLG1 = (1 << (chnl))        
 
 
 // Name definition to access the TCTL1 & TCTL2 as a single 16-bit word
