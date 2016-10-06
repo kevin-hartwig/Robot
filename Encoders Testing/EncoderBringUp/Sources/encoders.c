@@ -1,19 +1,15 @@
 #include <hidef.h>      /* common defines and macros */
 #include "derivative.h"      /* derivative-specific definitions */
 #include "macros.h"
+#include "encoders.h"
 
 /*****************************************************************
 *
 * HARDWARE PORT SETUP
 *
 *****************************************************************/
-
-#define RIGHT_WHEEL (0)        // Right wheel on timer channel 0
-#define LEFT_WHEEL  (1)        // Left wheel on timer channel 1
-
-//Globals
-unsigned int R_Count;
-unsigned int L_Count;
+volatile static unsigned int R_Count;
+volatile static unsigned int L_Count;
 
 void encodersInit(void) {
 
@@ -38,13 +34,32 @@ void encodersInit(void) {
 }
 
 
+int getDistance(int wheel) {
+
+  if (wheel == RIGHT_WHEEL) {
+    return((((R_Count*100)/WHEEL_ROTATION)*ENCODER_TO_MM)/100);
+  } else {      
+    return((L_Count/WHEEL_ROTATION)*ENCODER_TO_MM);
+  }
+  
+}
+
+
 /*****************************************************************
 */
 
 interrupt 8 void RightWheel( void ) {
+   (void)TC0;                  // Pay the pizza guy
+   
+   
    R_Count++;     
 }
 
 interrupt 9 void LeftWheel( void ) {
+   (void)TC1;                  // Pay the pizza guy
+   
+   
    L_Count++;
 }
+
+
