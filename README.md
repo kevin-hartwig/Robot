@@ -9,5 +9,5 @@ This repository is home to all of the drivers written for low level functionalit
 Contact: 
 
 * Kevin Hartwg:       khartwig8282@conestogac.on.ca
-* James Sonnenberg    jsonnenberg
-* Ovi Ofrim           oofrim
+* James Sonnenberg    
+* Ovi Ofrim           
