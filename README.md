@@ -1,6 +1,6 @@
-__*# ERE-EL Platform Repository*__
+__*#ERE-EL Platform Repository*__
 
-*Authors: James Sonnenberg, Kevin Hartwig and Ovi Ofrim
+*Authors: James Sonnenberg, Kevin Hartwig and Ovi Ofrim*
 
 Hello and welcome to the repository for the Platform controller.  See the documentation repository for additional project information. 
 
