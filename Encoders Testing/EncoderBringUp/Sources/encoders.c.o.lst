@@ -1,0 +1,101 @@
+*** EVALUATION ***
+ANSI-C/cC++ Compiler for HC12 V-5.0.41 Build 10203, Jul 23 2010
+
+    1:  #include <hidef.h>      /* common defines and macros */
+    2:  #include "derivative.h"      /* derivative-specific definitions */
+    3:  #include "macros.h"
+    4:  
+    5:  /*****************************************************************
+    6:  *
+    7:  * HARDWARE PORT SETUP
+    8:  *
+    9:  *****************************************************************/
+   10:  
+   11:  #define RIGHT_WHEEL (0)        // Right wheel on timer channel 0
+   12:  #define LEFT_WHEEL  (1)        // Left wheel on timer channel 1
+   13:  
+   14:  //Globals
+   15:  unsigned int R_Count;
+   16:  unsigned int L_Count;
+   17:  
+   18:  void encodersInit(void) {
+*** EVALUATION ***
+
+Function: encodersInit
+Source  : \\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\Sources\encoders.c
+Options : -CPUHCS12 -D__NO_FLOAT__ -Env"GENPATH=\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\bin;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\prm;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\cmd;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\Sources;C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\lib;C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\src;C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\include" -Env"LIBPATH=C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\include" -Env"OBJPATH=\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\bin" -Env"TEXTPATH=\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\bin" -Lasm="\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\EncoderBringUp_Data\Standard\ObjectCode\encoders.c.o.lst" -Ms -ObjN="\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\EncoderBringUp_Data\Standard\ObjectCode\encoders.c.o" -WmsgSd1106
+
+   19:  
+   20:    R_Count = 0; 
+  0000 c7           [1]     CLRB  
+  0001 87           [1]     CLRA  
+  0002 7c0000       [3]     STD   R_Count
+   21:    L_Count = 0;
+  0005 7c0000       [3]     STD   L_Count
+   22:    
+   23:    MAKE_CHNL_IC(RIGHT_WHEEL);
+  0008 4d0001       [4]     BCLR  _TIOS,#1
+   24:    MAKE_CHNL_IC(LEFT_WHEEL);
+  000b 4d0002       [4]     BCLR  _TIOS,#2
+   25:    
+   26:    TCTL4 = 0b00001010;          // Hardware will detect only rising edges - Last 4 bits represent channel 1, 0 (respectively)              
+  000e c60a         [1]     LDAB  #10
+  0010 5b00         [2]     STAB  _TCTL4
+   27:    
+   28:    //REMOVE WHEN INTEGRATING
+   29:      TSCR1 = 0b10110000;        // starting Tcount , enabling freeze, and enabling fast clear 
+  0012 c6b0         [1]     LDAB  #176
+  0014 5b00         [2]     STAB  _TSCR1
+   30:      TSCR2 = 0b00000011;        // setting prescaler to 8 (last 3 bits)               
+  0016 c603         [1]     LDAB  #3
+  0018 5b00         [2]     STAB  _TSCR2
+   31:    
+   32:    TIE = 0b00000011;            // Enable interrupts on channel 0 & 1
+  001a 5b00         [2]     STAB  _TIE
+   33:    
+   34:    CLR_TIMER_CHNL_FLAG(0);      // Clear pending interrupts
+  001c 57           [1]     ASRB  
+  001d 5b00         [2]     STAB  _TFLG1
+   35:    CLR_TIMER_CHNL_FLAG(1);
+  001f 58           [1]     LSLB  
+  0020 5b00         [2]     STAB  _TFLG1
+   36:    
+   37:    
+   38:  }
+  0022 3d           [5]     RTS   
+   39:  
+   40:  
+   41:  /*****************************************************************
+   42:  */
+   43:  
+   44:  interrupt 8 void RightWheel( void ) {
+*** EVALUATION ***
+
+Function: RightWheel
+Source  : \\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\Sources\encoders.c
+Options : -CPUHCS12 -D__NO_FLOAT__ -Env"GENPATH=\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\bin;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\prm;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\cmd;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\Sources;C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\lib;C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\src;C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\include" -Env"LIBPATH=C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\include" -Env"OBJPATH=\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\bin" -Env"TEXTPATH=\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\bin" -Lasm="\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\EncoderBringUp_Data\Standard\ObjectCode\encoders.c.o.lst" -Ms -ObjN="\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\EncoderBringUp_Data\Standard\ObjectCode\encoders.c.o" -WmsgSd1106
+
+   45:     (void)TC0;
+  0000 dc00         [3]     LDD   _TC0                                                                                                       
+   46:     R_Count++;     
+  0002 fe0000       [3]     LDX   R_Count
+  0005 08           [1]     INX   
+  0006 7e0000       [3]     STX   R_Count
+   47:  }
+  0009 0b           [8]     RTI   
+   48:  
+   49:  interrupt 9 void LeftWheel( void ) {
+*** EVALUATION ***
+
+Function: LeftWheel
+Source  : \\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\Sources\encoders.c
+Options : -CPUHCS12 -D__NO_FLOAT__ -Env"GENPATH=\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\bin;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\prm;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\cmd;\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\Sources;C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\lib;C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\src;C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\include" -Env"LIBPATH=C:\Program Files (x86)\Freescale\CWS12v5.1\lib\HC12c\include" -Env"OBJPATH=\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\bin" -Env"TEXTPATH=\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\bin" -Lasm="\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\EncoderBringUp_Data\Standard\ObjectCode\encoders.c.o.lst" -Ms -ObjN="\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\EncoderBringUp_Data\Standard\ObjectCode\encoders.c.o" -WmsgSd1106
+
+   50:     (void)TC1;
+  0000 dc00         [3]     LDD   _TC1
+   51:     L_Count++;
+  0002 fe0000       [3]     LDX   L_Count
+  0005 08           [1]     INX   
+  0006 7e0000       [3]     STX   L_Count
+   52:  }
+  0009 0b           [8]     RTI   

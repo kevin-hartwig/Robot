@@ -15,6 +15,7 @@ FILE SECTION
 mc9s12c32.c.o                           Model: SMALL,         Lang: ANSI-C
 main.c.o                                Model: SMALL,         Lang: ANSI-C
 Start12.c.o                             Model: SMALL,         Lang: ANSI-C
+rtshc12.c.o (ansisi.lib)                Model: SMALL,         Lang: ANSI-C
 encoders.c.o                            Model: SMALL,         Lang: ANSI-C
 
 *********************************************************************************************
@@ -24,8 +25,8 @@ Entry point: 0xC029 (_Startup)
 _startupData is allocated at 0xC031 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
-  _Range   pZeroOut       0x900     4
-  _Copy    *toCopyDownBeg 0xC0B0
+  _Range   pZeroOut       0x900     22
+  _Copy    *toCopyDownBeg 0xC2D1
 } _startupData;
 
 *********************************************************************************************
@@ -34,8 +35,8 @@ Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
 .init                             49     R     0xC000     0xC030   ROM_C000
 .startData                        10     R     0xC031     0xC03A   ROM_C000
-.text                            117     R     0xC03B     0xC0AF   ROM_C000
-.copy                              2     R     0xC0B0     0xC0B1   ROM_C000
+.text                            414     R     0xC03B     0xC1D8   ROM_C000
+.copy                              2     R     0xC2D1     0xC2D2   ROM_C000
 .stack                           256   R/W      0x800      0x8FF   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg1
@@ -260,12 +261,14 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_17e                   2   N/I      0x17E      0x17F   .absSeg220
 .abs_section_ffee                  2     R     0xFFEE     0xFFEF   .absSeg221
 .abs_section_ffec                  2     R     0xFFEC     0xFFED   .absSeg222
-.bss                               4   R/W      0x900      0x903   RAM
-.vectSeg223_vect                   2     R     0xFFFE     0xFFFF   .vectSeg223
+.abs_section_ffde                  2     R     0xFFDE     0xFFDF   .absSeg223
+.bss                              22   R/W      0x900      0x915   RAM
+RUNTIME                          248     R     0xC1D9     0xC2D0   ROM_C000
+.vectSeg224_vect                   2     R     0xFFFE     0xFFFF   .vectSeg224
 
 Summary of section sizes per section type:
-READ_ONLY (R):          B8 (dec:      184)
-READ_WRITE (R/W):      104 (dec:      260)
+READ_ONLY (R):         2DB (dec:      731)
+READ_WRITE (R/W):      116 (dec:      278)
 NO_INIT (N/I):         104 (dec:      260)
 
 *********************************************************************************************
@@ -470,7 +473,7 @@ MODULE:                 -- mc9s12c32.c.o --
      _DBGCC                                      26       2       2       0   .abs_section_26
      _DBGCA                                      2B       2       2       0   .abs_section_2b
      _DBGCB                                      2E       2       2       0   .abs_section_2e
-     _TCNT                                       44       2       2       0   .abs_section_44
+     _TCNT                                       44       2       2       6   .abs_section_44
      _TC0                                        50       2       2       1   .abs_section_50
      _TC1                                        52       2       2       1   .abs_section_52
      _TC2                                        54       2       2       0   .abs_section_54
@@ -504,7 +507,7 @@ MODULE:                 -- mc9s12c32.c.o --
      _CANTXTSR                                  17E       2       2       0   .abs_section_17e
 MODULE:                 -- main.c.o --
 - PROCEDURES:
-     main                                      C03B      18      24       1   .text       
+     main                                      C03B      4D      77       1   .text       
 - VARIABLES:
 MODULE:                 -- Start12.c.o --
 - PROCEDURES:
@@ -514,35 +517,59 @@ MODULE:                 -- Start12.c.o --
      _startupData                              C031       6       6       3   .startData  
 - LABELS:
      __SEG_END_SSTACK                           900       0       0       1               
+MODULE:                 -- rtshc12.c.o (ansisi.lib) --
+- PROCEDURES:
+     _LNEG                                     C1D9       D      13       1   RUNTIME     
+     _LMULS16x32                               C1E6      1F      31       1   RUNTIME     
+     _lDivMod                                  C205      BE     190       1   RUNTIME     
+     _LDIVU                                    C2C3       E      14       2   RUNTIME     
+- VARIABLES:
 MODULE:                 -- encoders.c.o --
 - PROCEDURES:
-     encodersInit                              C053      23      35       1   .text       
-     getDistance                               C076      26      38       1   .text       
-     RightWheel                                C09C       A      10       1   .text       
-     LeftWheel                                 C0A6       A      10       1   .text       
+     encodersInit                              C088      40      64       1   .text       
+     getDistance                               C0C8      26      38       1   .text       
+     getTCNTDifference                         C0EE      50      80       1   .text       
+     convertTCNT                               C13E       4       4       1   .text       
+     convertFrequency                          C142      2C      44       1   .text       
+     RightWheel                                C16E      2D      45       1   .text       
+     LeftWheel                                 C19B      2D      45       1   .text       
+     timerOverFlow                             C1C8      11      17       1   .text       
 - VARIABLES:
-     R_Count                                    900       2       2       4   .bss        
-     L_Count                                    902       2       2       4   .bss        
+     R_Count                                    900       2       2       7   .bss        
+     L_Count                                    902       2       2       7   .bss        
+     overflowcountR                             904       2       2       5   .bss        
+     overflowcountL                             906       2       2       5   .bss        
+     EdgeL_1                                    908       2       2       3   .bss        
+     EdgeL_2                                    90A       2       2       3   .bss        
+     EdgeR_1                                    90C       2       2       3   .bss        
+     EdgeR_2                                    90E       2       2       3   .bss        
+     L_Period                                   910       2       2       1   .bss        
+     R_Period                                   912       2       2       1   .bss        
+     lastOverFlow                               914       2       2       2   .bss        
      _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
      _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
+     _Vector_16                                FFDE       2       2       0   .abs_section_ffde
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
   mc9s12c32.c.o                              260      0      0
-  main.c.o                                     0     24      0
+  main.c.o                                     0     77      0
   Start12.c.o                                  0     49      0
-  encoders.c.o                                 4     93      4
+  rtshc12.c.o (ansisi.lib)                     0    248      0
+  encoders.c.o                                22    337      6
   other                                      256     12      2
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  main encodersInit getDistance RightWheel LeftWheel 
+  main encodersInit getDistance getTCNTDifference convertTCNT convertFrequency 
+  RightWheel LeftWheel timerOverFlow 
 SECTION: ".bss"
-  R_Count L_Count 
+  R_Count L_Count overflowcountR overflowcountL EdgeL_1 EdgeL_2 EdgeR_1 
+  EdgeR_2 L_Period R_Period lastOverFlow 
 SECTION: ".init"
   Init _Startup 
 SECTION: ".abs_section_8"
@@ -987,10 +1014,14 @@ SECTION: ".abs_section_16e"
   _CANRXTSR 
 SECTION: ".abs_section_17e"
   _CANTXTSR 
+SECTION: "RUNTIME"
+  _LNEG _LMULS16x32 _lDivMod _LDIVU 
 SECTION: ".abs_section_ffee"
   _Vector_8 
 SECTION: ".abs_section_ffec"
   _Vector_9 
+SECTION: ".abs_section_ffde"
+  _Vector_16 
 
 *********************************************************************************************
 OBJECT LIST SORTED BY ADDRESS
@@ -1042,7 +1073,7 @@ OBJECT LIST SORTED BY ADDRESS
      _CFORC                                      41       1       1       0   .abs_section_41
      _OC7M                                       42       1       1       0   .abs_section_42
      _OC7D                                       43       1       1       0   .abs_section_43
-     _TCNT                                       44       2       2       0   .abs_section_44
+     _TCNT                                       44       2       2       6   .abs_section_44
      _TSCR1                                      46       1       1       1   .abs_section_46
      _TTOV                                       47       1       1       0   .abs_section_47
      _TCTL1                                      48       1       1       0   .abs_section_48
@@ -1217,26 +1248,54 @@ OBJECT LIST SORTED BY ADDRESS
      _RDRAD                                     273       1       1       0   .abs_section_273
      _PERAD                                     274       1       1       0   .abs_section_274
      _PPSAD                                     275       1       1       0   .abs_section_275
-     R_Count                                    900       2       2       4   .bss        
-     L_Count                                    902       2       2       4   .bss        
+     R_Count                                    900       2       2       7   .bss        
+     L_Count                                    902       2       2       7   .bss        
+     overflowcountR                             904       2       2       5   .bss        
+     overflowcountL                             906       2       2       5   .bss        
+     EdgeL_1                                    908       2       2       3   .bss        
+     EdgeL_2                                    90A       2       2       3   .bss        
+     EdgeR_1                                    90C       2       2       3   .bss        
+     EdgeR_2                                    90E       2       2       3   .bss        
+     L_Period                                   910       2       2       1   .bss        
+     R_Period                                   912       2       2       1   .bss        
+     lastOverFlow                               914       2       2       2   .bss        
      Init                                      C000      29      41       1   .init       
      _Startup                                  C029       8       8       0   .init       
-     main                                      C03B      18      24       1   .text       
-     encodersInit                              C053      23      35       1   .text       
-     getDistance                               C076      26      38       1   .text       
-     RightWheel                                C09C       A      10       1   .text       
-     LeftWheel                                 C0A6       A      10       1   .text       
+     main                                      C03B      4D      77       1   .text       
+     encodersInit                              C088      40      64       1   .text       
+     getDistance                               C0C8      26      38       1   .text       
+     getTCNTDifference                         C0EE      50      80       1   .text       
+     convertTCNT                               C13E       4       4       1   .text       
+     convertFrequency                          C142      2C      44       1   .text       
+     RightWheel                                C16E      2D      45       1   .text       
+     LeftWheel                                 C19B      2D      45       1   .text       
+     timerOverFlow                             C1C8      11      17       1   .text       
+     _LNEG                                     C1D9       D      13       1   RUNTIME     
+     _LMULS16x32                               C1E6      1F      31       1   RUNTIME     
+     _lDivMod                                  C205      BE     190       1   RUNTIME     
+     _LDIVU                                    C2C3       E      14       2   RUNTIME     
+     _Vector_16                                FFDE       2       2       0   .abs_section_ffde
      _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
      _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
 
 *********************************************************************************************
 UNUSED-OBJECTS SECTION
 ---------------------------------------------------------------------------------------------
+NOT USED PROCEDURES
+rtshc12.c.o (ansisi.lib):
+  _BSHL _BSHRS _BSHRU _BDIVMODU _BDIVMODS _ISHL _ISHRU _ISHRS _LSHL _LSHRU 
+  _LSHRS _LADD _LSUB _LAND _LOR _LXOR _LCMP _LCMP_P _LCMP_PP _LCOM _LINC _LDEC 
+  _LMUL _LMULU16x32 _NEG_P _LDIVS _LMODU _LMODS _ILSEXT _COPY _CASE_DIRECT 
+  _CASE_DIRECT_BYTE _CASE_CHECKED _CASE_CHECKED_BYTE _CASE_SEARCH 
+  _CASE_SEARCH_BYTE _CASE_SEARCH_8 _CASE_SEARCH_8_BYTE _FCALL _FPCMP 
+NOT USED VARIABLES
+rtshc12.c.o (ansisi.lib):
+  _PowOfTwo_8 _PowOfTwo_16 _PowOfTwo_32 errno 
 
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xC0B0 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC2D1 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1245,12 +1304,23 @@ OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
 Init                      USES _startupData 
 _Startup                  USES __SEG_END_SSTACK Init main 
-main                      USES encodersInit getDistance 
-encodersInit              USES R_Count L_Count _TIOS _TCTL4 _TSCR1 _TSCR2 _TIE 
-                                _TFLG1 
+main                      USES encodersInit getDistance getTCNTDifference 
+                                convertTCNT convertFrequency _TCNT 
+encodersInit              USES EdgeL_1 EdgeL_2 L_Period EdgeR_1 EdgeR_2 
+                                R_Period lastOverFlow overflowcountR overflowcountL 
+                                R_Count L_Count _TIOS _TCTL4 _TSCR1 _TSCR2 _TIE _TFLG1 
 getDistance               USES R_Count L_Count 
-RightWheel                USES _TC0 R_Count 
-LeftWheel                 USES _TC1 L_Count 
+getTCNTDifference         USES EdgeR_2 EdgeR_1 overflowcountR EdgeL_2 EdgeL_1 
+                                overflowcountL lastOverFlow 
+convertFrequency          USES _LDIVU _LMULS16x32 
+RightWheel                USES R_Count _TC0 overflowcountR _TCNT EdgeR_1 
+                                EdgeR_2 
+LeftWheel                 USES L_Count _TC1 overflowcountL _TCNT EdgeL_1 
+                                EdgeL_2 
+timerOverFlow             USES _TCNT overflowcountR overflowcountL 
+_LMULS16x32               USES _LNEG 
+_LDIVU                    USES _lDivMod 
+_Vector_16                USES timerOverFlow 
 _Vector_9                 USES LeftWheel 
 _Vector_8                 USES RightWheel 
 
@@ -1264,7 +1334,21 @@ DEPENDENCY TREE
  |  +- encodersInit        
  |  |    
  |  +- getDistance         
- |       
+ |  |    
+ |  +- getTCNTDifference   
+ |  |    
+ |  +- convertTCNT         
+ |  |    
+ |  +- convertFrequency    
+ |     | 
+ |     +- _LDIVU              
+ |     |  | 
+ |     |  +- _lDivMod            
+ |     |       
+ |     +- _LMULS16x32         
+ |        | 
+ |        +- _LNEG               
+ |             
  +- _Startup            
     | 
     +- Init                
@@ -1279,12 +1363,16 @@ DEPENDENCY TREE
  | 
  +- LeftWheel           
       
+ _Vector_16          
+ | 
+ +- timerOverFlow       
+      
 *********************************************************************************************
 STATISTIC SECTION
 ---------------------------------------------------------------------------------------------
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 7
-Total size of all blocks to be downloaded: 184
+Number of blocks to be downloaded: 8
+Total size of all blocks to be downloaded: 731
 
