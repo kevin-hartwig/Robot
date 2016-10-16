@@ -1,5 +1,5 @@
 *** EVALUATION ***
-PROGRAM "G:\ESE 3\Project (ROBOT)\Robot_Platform\LCD\bin\Project.abs"
+PROGRAM "C:\Users\khartwig8282\Desktop\GitHub\Robot_Platform\LCD\bin\Project.abs"
 
 *********************************************************************************************
 TARGET SECTION
@@ -25,7 +25,6 @@ LCD.c.o                                 Model: SMALL,         Lang: ANSI-C
 Servo.c.o                               Model: SMALL,         Lang: ANSI-C
 stepper.c.o                             Model: SMALL,         Lang: ANSI-C
 DCmotor.c.o                             Model: SMALL,         Lang: ANSI-C
-encoders.c.o                            Model: SMALL,         Lang: ANSI-C
 
 *********************************************************************************************
 STARTUP SECTION
@@ -34,8 +33,8 @@ Entry point: 0xC029 (_Startup)
 _startupData is allocated at 0xC031 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
-  _Range   pZeroOut       0x900     104
-  _Copy    *toCopyDownBeg 0xD414
+  _Range   pZeroOut       0x900     100
+  _Copy    *toCopyDownBeg 0xD3DE
 } _startupData;
 
 *********************************************************************************************
@@ -46,8 +45,8 @@ Section Name                    Size  Type     From       To       Segment
 .startData                        10     R     0xC031     0xC03A   ROM_C000
 .rodata                          116     R     0xC03B     0xC0AE   ROM_C000
 .rodata1                          83     R     0xC0AF     0xC101   ROM_C000
-.text                           4532     R     0xC102     0xD2B5   ROM_C000
-.copy                             26     R     0xD414     0xD42D   ROM_C000
+.text                           4478     R     0xC102     0xD27F   ROM_C000
+.copy                             26     R     0xD3DE     0xD3F7   ROM_C000
 .stack                           256   R/W      0x800      0x8FF   RAM
 .data                             21   R/W      0x900      0x914   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
@@ -274,16 +273,14 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_ffd6                  2     R     0xFFD6     0xFFD7   .absSeg221
 .abs_section_ffea                  2     R     0xFFEA     0xFFEB   .absSeg222
 .abs_section_fff0                  2     R     0xFFF0     0xFFF1   .absSeg223
-.abs_section_ffee                  2     R     0xFFEE     0xFFEF   .absSeg224
-.abs_section_ffec                  2     R     0xFFEC     0xFFED   .absSeg225
 .bss                              36   R/W      0x915      0x938   RAM
-RUNTIME                          350     R     0xD2B6     0xD413   ROM_C000
-.common                           47   R/W      0x939      0x967   RAM
-.vectSeg226_vect                   2     R     0xFFFE     0xFFFF   .vectSeg226
+RUNTIME                          350     R     0xD280     0xD3DD   ROM_C000
+.common                           43   R/W      0x939      0x963   RAM
+.vectSeg224_vect                   2     R     0xFFFE     0xFFFF   .vectSeg224
 
 Summary of section sizes per section type:
-READ_ONLY (R):        143A (dec:     5178)
-READ_WRITE (R/W):      168 (dec:      360)
+READ_ONLY (R):        1400 (dec:     5120)
+READ_WRITE (R/W):      164 (dec:      356)
 NO_INIT (N/I):         104 (dec:      260)
 
 *********************************************************************************************
@@ -334,19 +331,19 @@ MODULE:                 -- mc9s12c32.c.o --
      _RTICTL                                     3B       1       1       3   .abs_section_3b
      _COPCTL                                     3C       1       1       0   .abs_section_3c
      _ARMCOP                                     3F       1       1       0   .abs_section_3f
-     _TIOS                                       40       1       1       4   .abs_section_40
+     _TIOS                                       40       1       1       2   .abs_section_40
      _CFORC                                      41       1       1       2   .abs_section_41
      _OC7M                                       42       1       1       0   .abs_section_42
      _OC7D                                       43       1       1       0   .abs_section_43
-     _TSCR1                                      46       1       1       2   .abs_section_46
+     _TSCR1                                      46       1       1       1   .abs_section_46
      _TTOV                                       47       1       1       0   .abs_section_47
      _TCTL1                                      48       1       1       8   .abs_section_48
      _TCTL2                                      49       1       1       0   .abs_section_49
-     _TCTL3                                      4A       1       1       1   .abs_section_4a
-     _TCTL4                                      4B       1       1       1   .abs_section_4b
-     _TIE                                        4C       1       1       2   .abs_section_4c
-     _TSCR2                                      4D       1       1       2   .abs_section_4d
-     _TFLG1                                      4E       1       1       5   .abs_section_4e
+     _TCTL3                                      4A       1       1       0   .abs_section_4a
+     _TCTL4                                      4B       1       1       0   .abs_section_4b
+     _TIE                                        4C       1       1       1   .abs_section_4c
+     _TSCR2                                      4D       1       1       1   .abs_section_4d
+     _TFLG1                                      4E       1       1       3   .abs_section_4e
      _TFLG2                                      4F       1       1       0   .abs_section_4f
      _PACTL                                      60       1       1       0   .abs_section_60
      _PAFLG                                      61       1       1       0   .abs_section_61
@@ -566,22 +563,22 @@ MODULE:                 -- STRING.C.o (ansisi.lib) --
 - VARIABLES:
 MODULE:                 -- rtshc12.c.o (ansisi.lib) --
 - PROCEDURES:
-     _LCMP_P                                   D2B6      15      21       4   RUNTIME     
-     _LNEG                                     D2CB       D      13       3   RUNTIME     
-     _LMULS16x32                               D2D8      1F      31       1   RUNTIME     
-     _lDivMod                                  D2F7      BE     190       1   RUNTIME     
-     _LDIVU                                    D3B5       E      14       1   RUNTIME     
-     _ILSEXT                                   D3C3       7       7       5   RUNTIME     
-     _CASE_DIRECT_BYTE                         D3CA       5       5       1   RUNTIME     
-     _CASE_CHECKED_BYTE                        D3CF      14      20       2   RUNTIME     
-     _CASE_SEARCH_8                            D3E3      17      23       2   RUNTIME     
-     _CASE_SEARCH_8_BYTE                       D3FA      1A      26       1   RUNTIME     
+     _LCMP_P                                   D280      15      21       4   RUNTIME     
+     _LNEG                                     D295       D      13       3   RUNTIME     
+     _LMULS16x32                               D2A2      1F      31       1   RUNTIME     
+     _lDivMod                                  D2C1      BE     190       1   RUNTIME     
+     _LDIVU                                    D37F       E      14       1   RUNTIME     
+     _ILSEXT                                   D38D       7       7       5   RUNTIME     
+     _CASE_DIRECT_BYTE                         D394       5       5       1   RUNTIME     
+     _CASE_CHECKED_BYTE                        D399      14      20       2   RUNTIME     
+     _CASE_SEARCH_8                            D3AD      17      23       2   RUNTIME     
+     _CASE_SEARCH_8_BYTE                       D3C4      1A      26       1   RUNTIME     
 - VARIABLES:
      errno                                      939       2       2       2   .common     
 MODULE:                 -- mainRS232.c.o --
 - PROCEDURES:
-     main                                      CCDD     240     576      10   .text       
-     SCI_Interrupt                             CF1D      17      23       1   .text       
+     main                                      CCDD     23E     574      10   .text       
+     SCI_Interrupt                             CF1B      17      23       1   .text       
 - VARIABLES:
      STRING.F.1                                C0AF       2       2       1   .rodata1    
      STRING....Hi.I.m.Rob....2                 C0B1      11      17       1   .rodata1    
@@ -600,25 +597,25 @@ MODULE:                 -- mainRS232.c.o --
      inputBuf                                   93C      20      32      11   .common     
 MODULE:                 -- LCD.c.o --
 - PROCEDURES:
-     LCDclrBOT                                 CF34       E      14       1   .text       
-     LCDclrTOP                                 CF42       E      14       1   .text       
-     LCDputc                                   CF50       3       3       1   .text       
-     LCDprintf                                 CF53      1D      29       5   .text       
-     LCDputs                                   CF70      37      55       1   .text       
-     LCDprintCMD                               CFA7       E      14       2   .text       
-     LCDdata                                   CFB5      37      55       1   .text       
-     LCDcmd                                    CFEC      37      55      11   .text       
-     LCDinit                                   D023      58      88       1   .text       
-     LCDclr                                    D07B       5       5       1   .text       
-     msDelay                                   D080      2B      43       4   .text       
+     LCDclrBOT                                 CF32       E      14       1   .text       
+     LCDclrTOP                                 CF40       E      14       1   .text       
+     LCDputc                                   CF4E       3       3       1   .text       
+     LCDprintf                                 CF51      1D      29       5   .text       
+     LCDputs                                   CF6E      37      55       1   .text       
+     LCDprintCMD                               CFA5       E      14       2   .text       
+     LCDdata                                   CFB3      37      55       1   .text       
+     LCDcmd                                    CFEA      37      55      11   .text       
+     LCDinit                                   D021      58      88       1   .text       
+     LCDclr                                    D079       5       5       1   .text       
+     msDelay                                   D07E      2B      43       4   .text       
 - VARIABLES:
      STRING..................1                 C0E0      11      17       1   .rodata1    
      STRING..................2                 C0F1      11      17       1   .rodata1    
 MODULE:                 -- Servo.c.o --
 - PROCEDURES:
-     setupTimerServo                           D0AB      35      53       2   .text       
-     enableServo                               D0E0      29      41       1   .text       
-     timerFunction                             D109      3F      63       1   .text       
+     setupTimerServo                           D0A9      35      53       2   .text       
+     enableServo                               D0DE      29      41       1   .text       
+     timerFunction                             D107      3F      63       1   .text       
 - VARIABLES:
      rdg                                        902       2       2       3   .data       
      _Vector_10                                FFEA       2       2       0   .abs_section_ffea
@@ -628,9 +625,9 @@ MODULE:                 -- Servo.c.o --
      offsetRDG                                  962       2       2       3   .common     
 MODULE:                 -- stepper.c.o --
 - PROCEDURES:
-     stepper_INIT                              D148      18      24       1   .text       
-     stepper_homing                            D160      1C      28       2   .text       
-     RTI_Interrupt                             D17C      C8     200       1   .text       
+     stepper_INIT                              D146      18      24       1   .text       
+     stepper_homing                            D15E      1C      28       2   .text       
+     RTI_Interrupt                             D17A      C8     200       1   .text       
 - VARIABLES:
      RTICTL_INIT                                904       1       1       4   .data       
      posTable                                   905      10      16       1   .data       
@@ -647,19 +644,9 @@ MODULE:                 -- stepper.c.o --
      _Vector_7                                 FFF0       2       2       0   .abs_section_fff0
 MODULE:                 -- DCmotor.c.o --
 - PROCEDURES:
-     DCinit                                    D244      39      57       1   .text       
-     stopDCMotor                               D27D       5       5       1   .text       
+     DCinit                                    D242      39      57       1   .text       
+     stopDCMotor                               D27B       5       5       1   .text       
 - VARIABLES:
-MODULE:                 -- encoders.c.o --
-- PROCEDURES:
-     encodersInit                              D282      24      36       1   .text       
-     RightWheel                                D2A6       8       8       1   .text       
-     LeftWheel                                 D2AE       8       8       1   .text       
-- VARIABLES:
-     _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
-     _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
-     R_Count                                    964       2       2       3   .common     
-     L_Count                                    966       2       2       3   .common     
 
 *********************************************************************************************
 MODULE STATISTIC
@@ -673,12 +660,11 @@ MODULE STATISTIC
   STDLIB.C.o (ansisi.lib)                      0    662      0
   STRING.C.o (ansisi.lib)                      0     13      0
   rtshc12.c.o (ansisi.lib)                     2    350      0
-  mainRS232.c.o                               45    599     51
+  mainRS232.c.o                               45    597     51
   LCD.c.o                                      0    375     34
   Servo.c.o                                   10    157      2
   stepper.c.o                                 37    252      2
   DCmotor.c.o                                  0     62      0
-  encoders.c.o                                 4     52      4
   other                                      256     12     26
 
 *********************************************************************************************
@@ -690,7 +676,6 @@ SECTION: ".text"
   SCI_Interrupt LCDclrBOT LCDclrTOP LCDputc LCDprintf LCDputs LCDprintCMD 
   LCDdata LCDcmd LCDinit LCDclr msDelay setupTimerServo enableServo 
   timerFunction stepper_INIT stepper_homing RTI_Interrupt DCinit stopDCMotor 
-  encodersInit RightWheel LeftWheel 
 SECTION: ".data"
   target rdg RTICTL_INIT posTable 
 SECTION: ".bss"
@@ -1150,17 +1135,13 @@ SECTION: "RUNTIME"
   _LCMP_P _LNEG _LMULS16x32 _lDivMod _LDIVU _ILSEXT _CASE_DIRECT_BYTE 
   _CASE_CHECKED_BYTE _CASE_SEARCH_8 _CASE_SEARCH_8_BYTE 
 SECTION: ".common"
-  errno readChar inputBuf TCNTTEMP DIRECTION EDGE offsetRDG R_Count L_Count 
+  errno readChar inputBuf TCNTTEMP DIRECTION EDGE offsetRDG 
 SECTION: ".abs_section_ffd6"
   _Vector_20 
 SECTION: ".abs_section_ffea"
   _Vector_10 
 SECTION: ".abs_section_fff0"
   _Vector_7 
-SECTION: ".abs_section_ffee"
-  _Vector_8 
-SECTION: ".abs_section_ffec"
-  _Vector_9 
 
 *********************************************************************************************
 OBJECT LIST SORTED BY ADDRESS
@@ -1208,20 +1189,20 @@ OBJECT LIST SORTED BY ADDRESS
      _RTICTL                                     3B       1       1       3   .abs_section_3b
      _COPCTL                                     3C       1       1       0   .abs_section_3c
      _ARMCOP                                     3F       1       1       0   .abs_section_3f
-     _TIOS                                       40       1       1       4   .abs_section_40
+     _TIOS                                       40       1       1       2   .abs_section_40
      _CFORC                                      41       1       1       2   .abs_section_41
      _OC7M                                       42       1       1       0   .abs_section_42
      _OC7D                                       43       1       1       0   .abs_section_43
      _TCNT                                       44       2       2       2   .abs_section_44
-     _TSCR1                                      46       1       1       2   .abs_section_46
+     _TSCR1                                      46       1       1       1   .abs_section_46
      _TTOV                                       47       1       1       0   .abs_section_47
      _TCTL1                                      48       1       1       8   .abs_section_48
      _TCTL2                                      49       1       1       0   .abs_section_49
-     _TCTL3                                      4A       1       1       1   .abs_section_4a
-     _TCTL4                                      4B       1       1       1   .abs_section_4b
-     _TIE                                        4C       1       1       2   .abs_section_4c
-     _TSCR2                                      4D       1       1       2   .abs_section_4d
-     _TFLG1                                      4E       1       1       5   .abs_section_4e
+     _TCTL3                                      4A       1       1       0   .abs_section_4a
+     _TCTL4                                      4B       1       1       0   .abs_section_4b
+     _TIE                                        4C       1       1       1   .abs_section_4c
+     _TSCR2                                      4D       1       1       1   .abs_section_4d
+     _TFLG1                                      4E       1       1       3   .abs_section_4e
      _TFLG2                                      4F       1       1       0   .abs_section_4f
      _TC0                                        50       2       2       3   .abs_section_50
      _TC1                                        52       2       2       0   .abs_section_52
@@ -1414,8 +1395,6 @@ OBJECT LIST SORTED BY ADDRESS
      DIRECTION                                  95E       2       2       2   .common     
      EDGE                                       960       2       2       4   .common     
      offsetRDG                                  962       2       2       3   .common     
-     R_Count                                    964       2       2       3   .common     
-     L_Count                                    966       2       2       3   .common     
      Init                                      C000      29      41       1   .init       
      _Startup                                  C029       8       8       0   .init       
      pow10                                     C03B      28      40       4   .rodata     
@@ -1446,44 +1425,39 @@ OBJECT LIST SORTED BY ADDRESS
      strtol                                    CCB3      13      19       1   .text       
      abs                                       CCC6       A      10       1   .text       
      strcpy                                    CCD0       D      13       1   .text       
-     main                                      CCDD     240     576      10   .text       
-     SCI_Interrupt                             CF1D      17      23       1   .text       
-     LCDclrBOT                                 CF34       E      14       1   .text       
-     LCDclrTOP                                 CF42       E      14       1   .text       
-     LCDputc                                   CF50       3       3       1   .text       
-     LCDprintf                                 CF53      1D      29       5   .text       
-     LCDputs                                   CF70      37      55       1   .text       
-     LCDprintCMD                               CFA7       E      14       2   .text       
-     LCDdata                                   CFB5      37      55       1   .text       
-     LCDcmd                                    CFEC      37      55      11   .text       
-     LCDinit                                   D023      58      88       1   .text       
-     LCDclr                                    D07B       5       5       1   .text       
-     msDelay                                   D080      2B      43       4   .text       
-     setupTimerServo                           D0AB      35      53       2   .text       
-     enableServo                               D0E0      29      41       1   .text       
-     timerFunction                             D109      3F      63       1   .text       
-     stepper_INIT                              D148      18      24       1   .text       
-     stepper_homing                            D160      1C      28       2   .text       
-     RTI_Interrupt                             D17C      C8     200       1   .text       
-     DCinit                                    D244      39      57       1   .text       
-     stopDCMotor                               D27D       5       5       1   .text       
-     encodersInit                              D282      24      36       1   .text       
-     RightWheel                                D2A6       8       8       1   .text       
-     LeftWheel                                 D2AE       8       8       1   .text       
-     _LCMP_P                                   D2B6      15      21       4   RUNTIME     
-     _LNEG                                     D2CB       D      13       3   RUNTIME     
-     _LMULS16x32                               D2D8      1F      31       1   RUNTIME     
-     _lDivMod                                  D2F7      BE     190       1   RUNTIME     
-     _LDIVU                                    D3B5       E      14       1   RUNTIME     
-     _ILSEXT                                   D3C3       7       7       5   RUNTIME     
-     _CASE_DIRECT_BYTE                         D3CA       5       5       1   RUNTIME     
-     _CASE_CHECKED_BYTE                        D3CF      14      20       2   RUNTIME     
-     _CASE_SEARCH_8                            D3E3      17      23       2   RUNTIME     
-     _CASE_SEARCH_8_BYTE                       D3FA      1A      26       1   RUNTIME     
+     main                                      CCDD     23E     574      10   .text       
+     SCI_Interrupt                             CF1B      17      23       1   .text       
+     LCDclrBOT                                 CF32       E      14       1   .text       
+     LCDclrTOP                                 CF40       E      14       1   .text       
+     LCDputc                                   CF4E       3       3       1   .text       
+     LCDprintf                                 CF51      1D      29       5   .text       
+     LCDputs                                   CF6E      37      55       1   .text       
+     LCDprintCMD                               CFA5       E      14       2   .text       
+     LCDdata                                   CFB3      37      55       1   .text       
+     LCDcmd                                    CFEA      37      55      11   .text       
+     LCDinit                                   D021      58      88       1   .text       
+     LCDclr                                    D079       5       5       1   .text       
+     msDelay                                   D07E      2B      43       4   .text       
+     setupTimerServo                           D0A9      35      53       2   .text       
+     enableServo                               D0DE      29      41       1   .text       
+     timerFunction                             D107      3F      63       1   .text       
+     stepper_INIT                              D146      18      24       1   .text       
+     stepper_homing                            D15E      1C      28       2   .text       
+     RTI_Interrupt                             D17A      C8     200       1   .text       
+     DCinit                                    D242      39      57       1   .text       
+     stopDCMotor                               D27B       5       5       1   .text       
+     _LCMP_P                                   D280      15      21       4   RUNTIME     
+     _LNEG                                     D295       D      13       3   RUNTIME     
+     _LMULS16x32                               D2A2      1F      31       1   RUNTIME     
+     _lDivMod                                  D2C1      BE     190       1   RUNTIME     
+     _LDIVU                                    D37F       E      14       1   RUNTIME     
+     _ILSEXT                                   D38D       7       7       5   RUNTIME     
+     _CASE_DIRECT_BYTE                         D394       5       5       1   RUNTIME     
+     _CASE_CHECKED_BYTE                        D399      14      20       2   RUNTIME     
+     _CASE_SEARCH_8                            D3AD      17      23       2   RUNTIME     
+     _CASE_SEARCH_8_BYTE                       D3C4      1A      26       1   RUNTIME     
      _Vector_20                                FFD6       2       2       0   .abs_section_ffd6
      _Vector_10                                FFEA       2       2       0   .abs_section_ffea
-     _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
-     _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
      _Vector_7                                 FFF0       2       2       0   .abs_section_fff0
 
 *********************************************************************************************
@@ -1528,28 +1502,28 @@ stepper.c.o:
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xD414 ---- SIZE       4 ---
+------- ROM-ADDRESS: 0xD3DE ---- SIZE       4 ---
 Filling bytes inserted
  00140901
-------- ROM-ADDRESS: 0xD418 ---- RAM-ADDRESS: 0x901 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD3E2 ---- RAM-ADDRESS: 0x901 ---- SIZE       1 ---
 Name of initialized Object : target:1
  55
-------- ROM-ADDRESS: 0xD419 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD3E3 ---- SIZE       1 ---
 Filling bytes inserted
  00
-------- ROM-ADDRESS: 0xD41A ---- RAM-ADDRESS: 0x903 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD3E4 ---- RAM-ADDRESS: 0x903 ---- SIZE       1 ---
 Name of initialized Object : rdg:1
  55
-------- ROM-ADDRESS: 0xD41B ---- RAM-ADDRESS: 0x904 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD3E5 ---- RAM-ADDRESS: 0x904 ---- SIZE       1 ---
 Name of initialized Object : RTICTL_INIT
  7F
-------- ROM-ADDRESS: 0xD41C ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD3E6 ---- SIZE       1 ---
 Filling bytes inserted
  00
-------- ROM-ADDRESS: 0xD41D ---- RAM-ADDRESS: 0x906 ---- SIZE      15 ---
+------- ROM-ADDRESS: 0xD3E7 ---- RAM-ADDRESS: 0x906 ---- SIZE      15 ---
 Name of initialized Object : posTable:1
  08000A0002 0006000400 0500010009
-------- ROM-ADDRESS: 0xD42C ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xD3F6 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1575,13 +1549,12 @@ strtol                    USES _strtol
 main                      USES _SCIBD _SCICR1 _SCICR2 STRING.F.1 strtol 
                                 testAtoi setupTimerServo LCDinit stepper_INIT 
                                 stepper_homing DCinit STRING....Hi.I.m.Rob....2 LCDprintf 
-                                encodersInit main readFlg readChar inputBuf offset 
-                                LCDclrBOT LCDprintCMD target STRING..s.d.3 sscanf 
-                                enableServo strcpy LCDclrTOP LCDcmd STRING..s.d.d.4 
-                                NUMSTEPS EXPECTED_STEPS RTICTL_INIT CURRENT_POSITION 
-                                STEP_TYPE _RTICTL homingHit STRING..s.d.d.5 stopDCMotor 
-                                _PORTAB _PWMDTY45 STRING...Error....6 i _SCISR1 
-                                _SCIDRL 
+                                main readFlg readChar inputBuf offset LCDclrBOT 
+                                LCDprintCMD target STRING..s.d.3 sscanf enableServo strcpy 
+                                LCDclrTOP LCDcmd STRING..s.d.d.4 NUMSTEPS EXPECTED_STEPS 
+                                RTICTL_INIT CURRENT_POSITION STEP_TYPE _RTICTL homingHit 
+                                STRING..s.d.d.5 stopDCMotor _PORTAB _PWMDTY45 
+                                STRING...Error....6 i _SCISR1 _SCIDRL 
 SCI_Interrupt             USES i _SCISR1 _SCIDRL readChar readFlg 
 LCDclrBOT                 USES LCDcmd STRING..................1 LCDprintf 
 LCDclrTOP                 USES LCDcmd STRING..................2 LCDprintf 
@@ -1609,16 +1582,10 @@ RTI_Interrupt             USES _CRGFLG NUMSTEPS EXPECTED_STEPS _PTAD
 DCinit                    USES _DDRAB _PWMCTL _PWMPRCLK _PWMSCLA _PWMCLK 
                                 _PWMPOL _PWMCAE _PWMPER45 _PWMDTY45 _PWMCNT45 _PWME 
 stopDCMotor               USES _PORTAB 
-encodersInit              USES R_Count L_Count _TIOS _TCTL4 _TCTL3 _TSCR1 
-                                _TSCR2 _TIE _TFLG1 
-RightWheel                USES R_Count 
-LeftWheel                 USES L_Count 
 _LMULS16x32               USES _LNEG 
 _LDIVU                    USES _lDivMod 
 _Vector_20                USES SCI_Interrupt 
 _Vector_10                USES timerFunction 
-_Vector_9                 USES LeftWheel 
-_Vector_8                 USES RightWheel 
 _Vector_7                 USES RTI_Interrupt 
 
 *********************************************************************************************
@@ -1712,8 +1679,6 @@ DEPENDENCY TREE
  |  |           | 
  |  |           +- msDelay              (see above)
  |  |              
- |  +- encodersInit        
- |  |    
  |  +- LCDclrBOT           
  |  |  | 
  |  |  +- LCDcmd               (see above)
@@ -1780,20 +1745,12 @@ DEPENDENCY TREE
     | 
     +- abs                 
          
- _Vector_8           
- | 
- +- RightWheel          
-      
- _Vector_9           
- | 
- +- LeftWheel           
-      
 *********************************************************************************************
 STATISTIC SECTION
 ---------------------------------------------------------------------------------------------
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 11
-Total size of all blocks to be downloaded: 5178
+Number of blocks to be downloaded: 10
+Total size of all blocks to be downloaded: 5120
 

@@ -1,5 +1,5 @@
 *** EVALUATION ***
-PROGRAM "\\Fs09d\stu11\Home\Khartwig8282\ESE 3\Project (ROBOT)\Robot_Platform\Encoders Testing\EncoderBringUp\bin\Project.abs"
+PROGRAM "C:\Users\khartwig8282\Desktop\GitHub\Robot_Platform\Encoders Testing\EncoderBringUp\bin\Project.abs"
 
 *********************************************************************************************
 TARGET SECTION
@@ -17,6 +17,7 @@ main.c.o                                Model: SMALL,         Lang: ANSI-C
 Start12.c.o                             Model: SMALL,         Lang: ANSI-C
 rtshc12.c.o (ansisi.lib)                Model: SMALL,         Lang: ANSI-C
 encoders.c.o                            Model: SMALL,         Lang: ANSI-C
+DCmotor.c.o                             Model: SMALL,         Lang: ANSI-C
 
 *********************************************************************************************
 STARTUP SECTION
@@ -25,8 +26,8 @@ Entry point: 0xC029 (_Startup)
 _startupData is allocated at 0xC031 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
-  _Range   pZeroOut       0x900     22
-  _Copy    *toCopyDownBeg 0xC2D1
+  _Range   pZeroOut       0x900     28
+  _Copy    *toCopyDownBeg 0xC355
 } _startupData;
 
 *********************************************************************************************
@@ -35,8 +36,8 @@ Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
 .init                             49     R     0xC000     0xC030   ROM_C000
 .startData                        10     R     0xC031     0xC03A   ROM_C000
-.text                            414     R     0xC03B     0xC1D8   ROM_C000
-.copy                              2     R     0xC2D1     0xC2D2   ROM_C000
+.text                            507     R     0xC03B     0xC235   ROM_C000
+.copy                              2     R     0xC355     0xC356   ROM_C000
 .stack                           256   R/W      0x800      0x8FF   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg1
@@ -262,13 +263,13 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_ffee                  2     R     0xFFEE     0xFFEF   .absSeg221
 .abs_section_ffec                  2     R     0xFFEC     0xFFED   .absSeg222
 .abs_section_ffde                  2     R     0xFFDE     0xFFDF   .absSeg223
-.bss                              22   R/W      0x900      0x915   RAM
-RUNTIME                          248     R     0xC1D9     0xC2D0   ROM_C000
+.bss                              28   R/W      0x900      0x91B   RAM
+RUNTIME                          287     R     0xC236     0xC354   ROM_C000
 .vectSeg224_vect                   2     R     0xFFFE     0xFFFF   .vectSeg224
 
 Summary of section sizes per section type:
-READ_ONLY (R):         2DB (dec:      731)
-READ_WRITE (R/W):      116 (dec:      278)
+READ_ONLY (R):         35F (dec:      863)
+READ_WRITE (R/W):      11C (dec:      284)
 NO_INIT (N/I):         104 (dec:      260)
 
 *********************************************************************************************
@@ -351,13 +352,13 @@ MODULE:                 -- mc9s12c32.c.o --
      _SPIBR                                      DA       1       1       0   .abs_section_da
      _SPISR                                      DB       1       1       0   .abs_section_db
      _SPIDR                                      DD       1       1       0   .abs_section_dd
-     _PWME                                       E0       1       1       0   .abs_section_e0
-     _PWMPOL                                     E1       1       1       0   .abs_section_e1
-     _PWMCLK                                     E2       1       1       0   .abs_section_e2
-     _PWMPRCLK                                   E3       1       1       0   .abs_section_e3
-     _PWMCAE                                     E4       1       1       0   .abs_section_e4
-     _PWMCTL                                     E5       1       1       0   .abs_section_e5
-     _PWMSCLA                                    E8       1       1       0   .abs_section_e8
+     _PWME                                       E0       1       1       1   .abs_section_e0
+     _PWMPOL                                     E1       1       1       2   .abs_section_e1
+     _PWMCLK                                     E2       1       1       3   .abs_section_e2
+     _PWMPRCLK                                   E3       1       1       1   .abs_section_e3
+     _PWMCAE                                     E4       1       1       2   .abs_section_e4
+     _PWMCTL                                     E5       1       1       1   .abs_section_e5
+     _PWMSCLA                                    E8       1       1       1   .abs_section_e8
      _PWMSCLB                                    E9       1       1       0   .abs_section_e9
      _PWMSDN                                     FE       1       1       0   .abs_section_fe
      _FCLKDIV                                   100       1       1       0   .abs_section_100
@@ -466,8 +467,8 @@ MODULE:                 -- mc9s12c32.c.o --
      _RDRAD                                     273       1       1       0   .abs_section_273
      _PERAD                                     274       1       1       0   .abs_section_274
      _PPSAD                                     275       1       1       0   .abs_section_275
-     _PORTAB                                      0       2       2       0   .abs_section_0
-     _DDRAB                                       2       2       2       0   .abs_section_2
+     _PORTAB                                      0       2       2       1   .abs_section_0
+     _DDRAB                                       2       2       2       1   .abs_section_2
      _PARTID                                     1A       2       2       0   .abs_section_1a
      _DBGTB                                      22       2       2       0   .abs_section_22
      _DBGCC                                      26       2       2       0   .abs_section_26
@@ -496,18 +497,18 @@ MODULE:                 -- mc9s12c32.c.o --
      _SCIBD                                      C8       2       2       0   .abs_section_c8
      _PWMCNT01                                   EC       2       2       0   .abs_section_ec
      _PWMCNT23                                   EE       2       2       0   .abs_section_ee
-     _PWMCNT45                                   F0       2       2       0   .abs_section_f0
+     _PWMCNT45                                   F0       2       2       2   .abs_section_f0
      _PWMPER01                                   F2       2       2       0   .abs_section_f2
      _PWMPER23                                   F4       2       2       0   .abs_section_f4
-     _PWMPER45                                   F6       2       2       0   .abs_section_f6
+     _PWMPER45                                   F6       2       2       2   .abs_section_f6
      _PWMDTY01                                   F8       2       2       0   .abs_section_f8
      _PWMDTY23                                   FA       2       2       0   .abs_section_fa
-     _PWMDTY45                                   FC       2       2       0   .abs_section_fc
+     _PWMDTY45                                   FC       2       2       4   .abs_section_fc
      _CANRXTSR                                  16E       2       2       0   .abs_section_16e
      _CANTXTSR                                  17E       2       2       0   .abs_section_17e
 MODULE:                 -- main.c.o --
 - PROCEDURES:
-     main                                      C03B      4D      77       1   .text       
+     main                                      C03B      60      96       1   .text       
 - VARIABLES:
 MODULE:                 -- Start12.c.o --
 - PROCEDURES:
@@ -519,57 +520,68 @@ MODULE:                 -- Start12.c.o --
      __SEG_END_SSTACK                           900       0       0       1               
 MODULE:                 -- rtshc12.c.o (ansisi.lib) --
 - PROCEDURES:
-     _LNEG                                     C1D9       D      13       1   RUNTIME     
-     _LMULS16x32                               C1E6      1F      31       1   RUNTIME     
-     _lDivMod                                  C205      BE     190       1   RUNTIME     
-     _LDIVU                                    C2C3       E      14       2   RUNTIME     
+     _LMULU16x32                               C236       F      15       1   RUNTIME     
+     _lDivMod                                  C245      BE     190       3   RUNTIME     
+     _LDIVU                                    C303       E      14       2   RUNTIME     
+     _NEG_P                                    C311       F      15       4   RUNTIME     
+     _LDIVS                                    C320      35      53       1   RUNTIME     
 - VARIABLES:
 MODULE:                 -- encoders.c.o --
 - PROCEDURES:
-     encodersInit                              C088      40      64       1   .text       
-     getDistance                               C0C8      26      38       1   .text       
-     getTCNTDifference                         C0EE      50      80       1   .text       
-     convertTCNT                               C13E       4       4       1   .text       
-     convertFrequency                          C142      2C      44       1   .text       
-     RightWheel                                C16E      2D      45       1   .text       
-     LeftWheel                                 C19B      2D      45       1   .text       
-     timerOverFlow                             C1C8      11      17       1   .text       
+     encodersInit                              C09B      49      73       1   .text       
+     getDistance                               C0E4      26      38       1   .text       
+     checkOverflows                            C10A       E      14       1   .text       
+     convertTCNT                               C118      16      22       1   .text       
+     convertFrequency                          C12E      36      54       1   .text       
+     getCount                                  C164       4       4       1   .text       
+     RightWheel                                C168      57      87       1   .text       
+     LeftWheel                                 C1BF      2D      45       1   .text       
+     timerOverFlow                             C1EC      11      17       1   .text       
 - VARIABLES:
      R_Count                                    900       2       2       7   .bss        
      L_Count                                    902       2       2       7   .bss        
-     overflowcountR                             904       2       2       5   .bss        
-     overflowcountL                             906       2       2       5   .bss        
-     EdgeL_1                                    908       2       2       3   .bss        
-     EdgeL_2                                    90A       2       2       3   .bss        
-     EdgeR_1                                    90C       2       2       3   .bss        
-     EdgeR_2                                    90E       2       2       3   .bss        
-     L_Period                                   910       2       2       1   .bss        
-     R_Period                                   912       2       2       1   .bss        
-     lastOverFlow                               914       2       2       2   .bss        
+     overflowcountR                             904       2       2       6   .bss        
+     overflowcountL                             906       2       2       4   .bss        
+     overflowcountR_final                       908       2       2       4   .bss        
+     count100                                   90A       2       2       3   .bss        
+     EdgeL_1                                    90C       2       2       2   .bss        
+     EdgeL_2                                    90E       2       2       2   .bss        
+     EdgeR_1                                    910       2       2       4   .bss        
+     EdgeR_2                                    912       2       2       4   .bss        
+     L_Period                                   914       2       2       1   .bss        
+     R_Period                                   916       2       2       1   .bss        
+     lastOverFlow                               918       2       2       1   .bss        
+     InterruptCounter                           91A       2       2       3   .bss        
      _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
      _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
      _Vector_16                                FFDE       2       2       0   .abs_section_ffde
+MODULE:                 -- DCmotor.c.o --
+- PROCEDURES:
+     DCinit                                    C1FD      39      57       1   .text       
+- VARIABLES:
 
 *********************************************************************************************
 MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
   mc9s12c32.c.o                              260      0      0
-  main.c.o                                     0     77      0
+  main.c.o                                     0     96      0
   Start12.c.o                                  0     49      0
-  rtshc12.c.o (ansisi.lib)                     0    248      0
-  encoders.c.o                                22    337      6
+  rtshc12.c.o (ansisi.lib)                     0    287      0
+  encoders.c.o                                28    354      6
+  DCmotor.c.o                                  0     57      0
   other                                      256     12      2
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
-  main encodersInit getDistance getTCNTDifference convertTCNT convertFrequency 
-  RightWheel LeftWheel timerOverFlow 
+  main encodersInit getDistance checkOverflows convertTCNT convertFrequency 
+  getCount RightWheel LeftWheel timerOverFlow DCinit 
 SECTION: ".bss"
-  R_Count L_Count overflowcountR overflowcountL EdgeL_1 EdgeL_2 EdgeR_1 
-  EdgeR_2 L_Period R_Period lastOverFlow 
+  R_Count L_Count overflowcountR overflowcountL overflowcountR_final count100 
+  EdgeL_1 EdgeL_2 EdgeR_1 EdgeR_2 L_Period R_Period lastOverFlow 
+  InterruptCounter 
 SECTION: ".init"
   Init _Startup 
 SECTION: ".abs_section_8"
@@ -1015,7 +1027,7 @@ SECTION: ".abs_section_16e"
 SECTION: ".abs_section_17e"
   _CANTXTSR 
 SECTION: "RUNTIME"
-  _LNEG _LMULS16x32 _lDivMod _LDIVU 
+  _LMULU16x32 _lDivMod _LDIVU _NEG_P _LDIVS 
 SECTION: ".abs_section_ffee"
   _Vector_8 
 SECTION: ".abs_section_ffec"
@@ -1027,8 +1039,8 @@ SECTION: ".abs_section_ffde"
 OBJECT LIST SORTED BY ADDRESS
      Name                                      Addr   hSize   dSize     Ref    Section   RLIB
 ---------------------------------------------------------------------------------------------
-     _PORTAB                                      0       2       2       0   .abs_section_0
-     _DDRAB                                       2       2       2       0   .abs_section_2
+     _PORTAB                                      0       2       2       1   .abs_section_0
+     _DDRAB                                       2       2       2       1   .abs_section_2
      _PORTE                                       8       1       1       0   .abs_section_8
      _DDRE                                        9       1       1       0   .abs_section_9
      _PEAR                                        A       1       1       0   .abs_section_a
@@ -1122,23 +1134,23 @@ OBJECT LIST SORTED BY ADDRESS
      _SPIBR                                      DA       1       1       0   .abs_section_da
      _SPISR                                      DB       1       1       0   .abs_section_db
      _SPIDR                                      DD       1       1       0   .abs_section_dd
-     _PWME                                       E0       1       1       0   .abs_section_e0
-     _PWMPOL                                     E1       1       1       0   .abs_section_e1
-     _PWMCLK                                     E2       1       1       0   .abs_section_e2
-     _PWMPRCLK                                   E3       1       1       0   .abs_section_e3
-     _PWMCAE                                     E4       1       1       0   .abs_section_e4
-     _PWMCTL                                     E5       1       1       0   .abs_section_e5
-     _PWMSCLA                                    E8       1       1       0   .abs_section_e8
+     _PWME                                       E0       1       1       1   .abs_section_e0
+     _PWMPOL                                     E1       1       1       2   .abs_section_e1
+     _PWMCLK                                     E2       1       1       3   .abs_section_e2
+     _PWMPRCLK                                   E3       1       1       1   .abs_section_e3
+     _PWMCAE                                     E4       1       1       2   .abs_section_e4
+     _PWMCTL                                     E5       1       1       1   .abs_section_e5
+     _PWMSCLA                                    E8       1       1       1   .abs_section_e8
      _PWMSCLB                                    E9       1       1       0   .abs_section_e9
      _PWMCNT01                                   EC       2       2       0   .abs_section_ec
      _PWMCNT23                                   EE       2       2       0   .abs_section_ee
-     _PWMCNT45                                   F0       2       2       0   .abs_section_f0
+     _PWMCNT45                                   F0       2       2       2   .abs_section_f0
      _PWMPER01                                   F2       2       2       0   .abs_section_f2
      _PWMPER23                                   F4       2       2       0   .abs_section_f4
-     _PWMPER45                                   F6       2       2       0   .abs_section_f6
+     _PWMPER45                                   F6       2       2       2   .abs_section_f6
      _PWMDTY01                                   F8       2       2       0   .abs_section_f8
      _PWMDTY23                                   FA       2       2       0   .abs_section_fa
-     _PWMDTY45                                   FC       2       2       0   .abs_section_fc
+     _PWMDTY45                                   FC       2       2       4   .abs_section_fc
      _PWMSDN                                     FE       1       1       0   .abs_section_fe
      _FCLKDIV                                   100       1       1       0   .abs_section_100
      _FSEC                                      101       1       1       0   .abs_section_101
@@ -1250,30 +1262,36 @@ OBJECT LIST SORTED BY ADDRESS
      _PPSAD                                     275       1       1       0   .abs_section_275
      R_Count                                    900       2       2       7   .bss        
      L_Count                                    902       2       2       7   .bss        
-     overflowcountR                             904       2       2       5   .bss        
-     overflowcountL                             906       2       2       5   .bss        
-     EdgeL_1                                    908       2       2       3   .bss        
-     EdgeL_2                                    90A       2       2       3   .bss        
-     EdgeR_1                                    90C       2       2       3   .bss        
-     EdgeR_2                                    90E       2       2       3   .bss        
-     L_Period                                   910       2       2       1   .bss        
-     R_Period                                   912       2       2       1   .bss        
-     lastOverFlow                               914       2       2       2   .bss        
+     overflowcountR                             904       2       2       6   .bss        
+     overflowcountL                             906       2       2       4   .bss        
+     overflowcountR_final                       908       2       2       4   .bss        
+     count100                                   90A       2       2       3   .bss        
+     EdgeL_1                                    90C       2       2       2   .bss        
+     EdgeL_2                                    90E       2       2       2   .bss        
+     EdgeR_1                                    910       2       2       4   .bss        
+     EdgeR_2                                    912       2       2       4   .bss        
+     L_Period                                   914       2       2       1   .bss        
+     R_Period                                   916       2       2       1   .bss        
+     lastOverFlow                               918       2       2       1   .bss        
+     InterruptCounter                           91A       2       2       3   .bss        
      Init                                      C000      29      41       1   .init       
      _Startup                                  C029       8       8       0   .init       
-     main                                      C03B      4D      77       1   .text       
-     encodersInit                              C088      40      64       1   .text       
-     getDistance                               C0C8      26      38       1   .text       
-     getTCNTDifference                         C0EE      50      80       1   .text       
-     convertTCNT                               C13E       4       4       1   .text       
-     convertFrequency                          C142      2C      44       1   .text       
-     RightWheel                                C16E      2D      45       1   .text       
-     LeftWheel                                 C19B      2D      45       1   .text       
-     timerOverFlow                             C1C8      11      17       1   .text       
-     _LNEG                                     C1D9       D      13       1   RUNTIME     
-     _LMULS16x32                               C1E6      1F      31       1   RUNTIME     
-     _lDivMod                                  C205      BE     190       1   RUNTIME     
-     _LDIVU                                    C2C3       E      14       2   RUNTIME     
+     main                                      C03B      60      96       1   .text       
+     encodersInit                              C09B      49      73       1   .text       
+     getDistance                               C0E4      26      38       1   .text       
+     checkOverflows                            C10A       E      14       1   .text       
+     convertTCNT                               C118      16      22       1   .text       
+     convertFrequency                          C12E      36      54       1   .text       
+     getCount                                  C164       4       4       1   .text       
+     RightWheel                                C168      57      87       1   .text       
+     LeftWheel                                 C1BF      2D      45       1   .text       
+     timerOverFlow                             C1EC      11      17       1   .text       
+     DCinit                                    C1FD      39      57       1   .text       
+     _LMULU16x32                               C236       F      15       1   RUNTIME     
+     _lDivMod                                  C245      BE     190       3   RUNTIME     
+     _LDIVU                                    C303       E      14       2   RUNTIME     
+     _NEG_P                                    C311       F      15       4   RUNTIME     
+     _LDIVS                                    C320      35      53       1   RUNTIME     
      _Vector_16                                FFDE       2       2       0   .abs_section_ffde
      _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
      _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
@@ -1282,12 +1300,18 @@ OBJECT LIST SORTED BY ADDRESS
 UNUSED-OBJECTS SECTION
 ---------------------------------------------------------------------------------------------
 NOT USED PROCEDURES
+main.c.o:
+  strcmp 
 rtshc12.c.o (ansisi.lib):
   _BSHL _BSHRS _BSHRU _BDIVMODU _BDIVMODS _ISHL _ISHRU _ISHRS _LSHL _LSHRU 
-  _LSHRS _LADD _LSUB _LAND _LOR _LXOR _LCMP _LCMP_P _LCMP_PP _LCOM _LINC _LDEC 
-  _LMUL _LMULU16x32 _NEG_P _LDIVS _LMODU _LMODS _ILSEXT _COPY _CASE_DIRECT 
+  _LSHRS _LADD _LSUB _LAND _LOR _LXOR _LCMP _LCMP_P _LCMP_PP _LNEG _LCOM _LINC 
+  _LDEC _LMUL _LMULS16x32 _LMODU _LMODS _ILSEXT _COPY _CASE_DIRECT 
   _CASE_DIRECT_BYTE _CASE_CHECKED _CASE_CHECKED_BYTE _CASE_SEARCH 
   _CASE_SEARCH_BYTE _CASE_SEARCH_8 _CASE_SEARCH_8_BYTE _FCALL _FPCMP 
+encoders.c.o:
+  getTCNTDifference 
+DCmotor.c.o:
+  stopDCMotor 
 NOT USED VARIABLES
 rtshc12.c.o (ansisi.lib):
   _PowOfTwo_8 _PowOfTwo_16 _PowOfTwo_32 errno 
@@ -1295,7 +1319,7 @@ rtshc12.c.o (ansisi.lib):
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xC2D1 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC355 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1304,22 +1328,27 @@ OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
 Init                      USES _startupData 
 _Startup                  USES __SEG_END_SSTACK Init main 
-main                      USES encodersInit getDistance getTCNTDifference 
-                                convertTCNT convertFrequency _TCNT 
-encodersInit              USES EdgeL_1 EdgeL_2 L_Period EdgeR_1 EdgeR_2 
-                                R_Period lastOverFlow overflowcountR overflowcountL 
-                                R_Count L_Count _TIOS _TCTL4 _TSCR1 _TSCR2 _TIE _TFLG1 
+main                      USES encodersInit DCinit _PORTAB _PWMDTY45 
+                                getDistance checkOverflows getCount convertTCNT 
+                                convertFrequency _TCNT 
+encodersInit              USES InterruptCounter EdgeL_1 EdgeL_2 L_Period 
+                                EdgeR_1 EdgeR_2 R_Period count100 lastOverFlow 
+                                overflowcountR overflowcountL overflowcountR_final R_Count 
+                                L_Count _TIOS _TCTL4 _TSCR1 _TSCR2 _TIE _TFLG1 
 getDistance               USES R_Count L_Count 
-getTCNTDifference         USES EdgeR_2 EdgeR_1 overflowcountR EdgeL_2 EdgeL_1 
-                                overflowcountL lastOverFlow 
-convertFrequency          USES _LDIVU _LMULS16x32 
-RightWheel                USES R_Count _TC0 overflowcountR _TCNT EdgeR_1 
-                                EdgeR_2 
+checkOverflows            USES overflowcountR 
+convertTCNT               USES _LDIVS 
+convertFrequency          USES _LDIVU _LMULU16x32 
+getCount                  USES count100 
+RightWheel                USES InterruptCounter R_Count _TC0 overflowcountR 
+                                _TCNT EdgeR_1 EdgeR_2 overflowcountR_final count100 
 LeftWheel                 USES L_Count _TC1 overflowcountL _TCNT EdgeL_1 
                                 EdgeL_2 
 timerOverFlow             USES _TCNT overflowcountR overflowcountL 
-_LMULS16x32               USES _LNEG 
+DCinit                    USES _DDRAB _PWMCTL _PWMPRCLK _PWMSCLA _PWMCLK 
+                                _PWMPOL _PWMCAE _PWMPER45 _PWMDTY45 _PWMCNT45 _PWME 
 _LDIVU                    USES _lDivMod 
+_LDIVS                    USES _NEG_P _lDivMod 
 _Vector_16                USES timerOverFlow 
 _Vector_9                 USES LeftWheel 
 _Vector_8                 USES RightWheel 
@@ -1333,22 +1362,30 @@ DEPENDENCY TREE
  |  | 
  |  +- encodersInit        
  |  |    
+ |  +- DCinit              
+ |  |    
  |  +- getDistance         
  |  |    
- |  +- getTCNTDifference   
+ |  +- checkOverflows      
+ |  |    
+ |  +- getCount            
  |  |    
  |  +- convertTCNT         
- |  |    
+ |  |  | 
+ |  |  +- _LDIVS              
+ |  |     | 
+ |  |     +- _NEG_P              
+ |  |     |    
+ |  |     +- _lDivMod            
+ |  |          
  |  +- convertFrequency    
  |     | 
  |     +- _LDIVU              
  |     |  | 
- |     |  +- _lDivMod            
- |     |       
- |     +- _LMULS16x32         
- |        | 
- |        +- _LNEG               
- |             
+ |     |  +- _lDivMod             (see above)
+ |     |     
+ |     +- _LMULU16x32         
+ |          
  +- _Startup            
     | 
     +- Init                
@@ -1373,6 +1410,6 @@ STATISTIC SECTION
 
 ExeFile:
 --------
-Number of blocks to be downloaded: 8
-Total size of all blocks to be downloaded: 731
+Number of blocks to be downloaded: 9
+Total size of all blocks to be downloaded: 863
 

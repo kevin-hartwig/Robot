@@ -120,7 +120,7 @@ DCinit();
   
 /****** SETUP ENCODERS ********/
 
-  encodersInit();
+  //encodersInit();
   
   
   for(;;)
@@ -264,7 +264,7 @@ DCinit();
           stepper_homing();
           break;
      
-             case('D'):   
+        case('D'):   
         //arguments[0] = Direction
         //arguments[1] = % speed
           sscanf((const char *)inputBuf, "%s" "%d" "%d", discard, 

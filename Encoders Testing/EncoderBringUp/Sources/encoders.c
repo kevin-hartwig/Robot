@@ -10,11 +10,14 @@
 *****************************************************************/
 volatile static unsigned int R_Count;
 volatile static unsigned int L_Count;
-volatile static unsigned int overflowcountR, overflowcountL;
+volatile static unsigned int overflowcountR, overflowcountL, overflowcountR_final, count100;
 volatile static unsigned int EdgeL_1, EdgeL_2, EdgeR_1, EdgeR_2, L_Period, R_Period;
 volatile static unsigned int lastOverFlow;
+volatile static unsigned int InterruptCounter;
 
 void encodersInit(void) {
+
+  InterruptCounter = 0;
 
   EdgeL_1 = 0;
   EdgeL_2 = 0;
@@ -23,10 +26,13 @@ void encodersInit(void) {
   EdgeR_2 = 0;
   R_Period = 0;
   
+  count100 = 0;
+  
   lastOverFlow = 0;
   
   overflowcountR = 0;
   overflowcountL = 0;
+  overflowcountR_final = 0;
 
   R_Count = 0; 
   L_Count = 0;
@@ -72,52 +78,81 @@ unsigned long getTCNTDifference(unsigned int Side) {
   unsigned int Edge2, Edge1, overflows;
   
  
-
-  if (Side == RIGHT_WHEEL) {
-      Edge2 = EdgeR_2;
-      Edge1 = EdgeR_1;
-      overflows = overflowcountR;
-  } else if (Side == LEFT_WHEEL) {
-      Edge2 = EdgeL_2;
-      Edge1 = EdgeL_1;
-      overflows = overflowcountL;
-  }  
+   DisableInterrupts;
+    if (Side == RIGHT_WHEEL) {
+        Edge2 = EdgeR_2;
+        Edge1 = EdgeR_1;
+        overflows = overflowcountR_final;
+    } else if (Side == LEFT_WHEEL) {
+        Edge2 = EdgeL_2;
+        Edge1 = EdgeL_1;
+        overflows = overflowcountL;
+    } 
+      EnableInterrupts; 
   
- //  if (overflows > 20) 
- //     return(0);
+   if (overflows > 15) {
+      DisableInterrupts;
+      EdgeR_2 = 0;
+      EdgeR_1 = 0;  
+      R_Count = 0;
+      EnableInterrupts;    
+      return(0);
+   }
    
-   lastOverFlow = overflows;
+  lastOverFlow = overflows;
+     /*
+  if (Edge2 > Edge1)
+      return(Edge2-Edge1);
+  else 
+      return(0xFFFF - (Edge1-Edge2));
+        */
   
   if (overflows) {        //TCNT Overflowed
-     if (Edge2 > Edge1)
-        return(TCNTMAX*overflows - (Edge2 - Edge1));
-     else 
-        return(TCNTMAX*overflows - (Edge1 - Edge2));
+     return(TCNTMAX*overflows-Edge1+Edge2);
      
   } else
      return(Edge2 - Edge1);
+  
+  
 }
+
+int checkOverflows(void) {
+  
+  if (overflowcountR > 5)
+    return 1;
+  else
+    return 0;
+}
+
 
 // Returns the TCNT ticks passed as the argument to vane frequency 
 unsigned long convertTCNT(unsigned int TCNTDifference) {
-   return(TCNTDifference*(ECLOCK/PRESCALER)); 
+   if (TCNTDifference==0) 
+      return(0);      
+   return(800000/(TCNTDifference*8)); 
 }
 
 unsigned long convertFrequency(unsigned int frequency) {
                                                                                       // Carried over divide by 1000000
    unsigned long MotorEncoderShaftSpeed = frequency / NUM_ENCODER_VANES;               // 
-   unsigned long MotorOutputFrequency = MotorEncoderShaftSpeed / MOTOR_GEAR_RATIO;     // (overall, divided by 10)       (for Motor Gear Ratio)
+   unsigned long MotorOutputFrequency = MotorEncoderShaftSpeed*10000 / MOTOR_GEAR_RATIO;     // (overall, divided by 10)       (for Motor Gear Ratio)
    unsigned long FinalSpeed = PI*WHEEL_DIAMETER*(MotorOutputFrequency);                // (overall, multiplied by 100)   (for PI) 
                                                                                       // ---------------------------
-   return(FinalSpeed/100000);                                                         // (overall, divide by 10)        (to restore final value)
+   return(FinalSpeed/10000); //divide by 10000                                        // (overall, divide by 10)        (to restore final value)
 
    //return(PI*WHEEL_DIAMETER*((frequency/27)/22.5)); 
 }
+
+unsigned int getCount(void) {   
+  return(count100);
+}
+
 
 /*****************************************************************
 */
 
 interrupt 8 void RightWheel( void ) { 
+   InterruptCounter++;
    R_Count++;
    
    (void)TC0;                  // Pay the pizza guy
@@ -129,6 +164,14 @@ interrupt 8 void RightWheel( void ) {
    else if (R_Count == 2) {
     R_Count = 0;
     EdgeR_2 = TCNT;
+    overflowcountR_final = overflowcountR;
+    
+     if (overflowcountR_final) {        //TCNT Overflowed
+        count100 = (TCNTMAX*overflowcountR_final)-EdgeR_1+EdgeR_2;
+     
+     } else
+        count100 = (EdgeR_2 - EdgeR_1);
+    
    }
         
 }
