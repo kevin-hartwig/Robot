@@ -14,7 +14,7 @@ void main(void) {
   unsigned long ticks = 0;
   unsigned long speed = 0; 
   unsigned long TCNT_VAR = 0; 	
-	
+	  
 	encodersInit();
 	DCinit(); 
 	
@@ -27,11 +27,11 @@ void main(void) {
   PWMDTY4 = ((-127*(10))/100)+127;
 
   for(;;) {   
-     
-     DistanceTravelled = getDistance(RIGHT_WHEEL);        
-     
-     if (!checkOverflows()) ticks = getCount();
-     else ticks = 0;
+  
+     if (!checkOverflows(RIGHT_WHEEL)) 
+        ticks = getCount(RIGHT_WHEEL);
+     else 
+        ticks = 0;
      frequency = convertTCNT(ticks);
      speed = convertFrequency(frequency);   
      TCNT_VAR = TCNT;  

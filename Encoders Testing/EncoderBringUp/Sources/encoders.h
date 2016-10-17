@@ -6,8 +6,8 @@ unsigned long convertFrequency(unsigned int frequency);
 unsigned long convertTCNT(unsigned int TCNTDifference);
 //unsigned long getTCNTDifference(int side);
 int getCounter(void);
-unsigned int getCount(void);
-int checkOverflows(void);
+unsigned int getCount(int side);
+int checkOverflows(int side);
 
 #define RIGHT_WHEEL (0)        // Right wheel on timer channel 0
 #define LEFT_WHEEL  (1)        // Left wheel on timer channel 1
