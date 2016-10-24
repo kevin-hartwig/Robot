@@ -97,30 +97,7 @@ main()
 	//printf("pthread_create() for thread 2 returns %d\n",iret2);
 
 
-	//VARIABLES FOR READING FROM TEXT FILE
-	FILE *fp;
-	char ch;
-
-
-	//READING THE INPUT BUFFER FILE
-	for(;;)	
-	{	
-		if(counter == 0)
-		{
-			fp = fopen("inputs.txt", "r");
-			if(!fp)
-			{
-				printf("Error opening file\n");
-				return(0);
-			}
-			fgets(ReadBuf, sizeof(ReadBuf), fp);
-		
-			fclose(fp);
-			//printf("%s 	-Main\n",ReadBuf);
-			iret1 = pthread_create(&thread1, NULL, print_message_function, (void*) message1);	
-			pthread_join(thread1,NULL);
-		}	
-	}
+		pthread_join(thread1,NULL);
 
 	exit(EXIT_SUCCESS);
 }
@@ -131,29 +108,49 @@ void *print_message_function(void *ptr)
 {
 	//pthread_mutex_lock( &mutex1 );
 	int bytes = 1, len;	
-	counter = 1;
 	
 
-	if(strcmp(ReadBuf, LastMessage) != 0) 
-	{
-		fflush(stdout);
-		printf("%s \n", ReadBuf);
-		strcpy(LastMessage, ReadBuf);
-		
-		len = strlen(ReadBuf);
-		bytes = write(PORTfd, ReadBuf, len);
-		
-	if(bytes != len) {	
-			printf("Failed to write entire string?\n");
-			fflush(stdout);
-		}
-		else {
-			printf("\n<SENT> %s", ReadBuf);
-			fflush(stdout);
-		}
+	//VARIABLES FOR READING FROM TEXT FILE
+	FILE *fp;
+	char ch;
 
+
+	//READING THE INPUT BUFFER FILE
+	for(;;)	
+	{	
+		fp = fopen("inputs.txt", "r");
+		if(!fp)
+		{
+			printf("Error opening file\n");
+			return(0);
+		}
+		fgets(ReadBuf, sizeof(ReadBuf), fp);
+	
+		fclose(fp);
+		//printf("%s 	-Main\n",ReadBuf);
+		//iret1 = pthread_create(&thread1, NULL, print_message_function, (void*) message1);	
+		//pthread_join(thread1,NULL);
+	
+
+		if(strcmp(ReadBuf, LastMessage) != 0) 
+		{
+			fflush(stdout);
+			printf("%s \n", ReadBuf);
+			strcpy(LastMessage, ReadBuf);
+			
+			len = strlen(ReadBuf);
+			bytes = write(PORTfd, ReadBuf, len);
+			
+		if(bytes != len) {	
+				printf("Failed to write entire string?\n");
+				fflush(stdout);
+			}
+			else {
+				printf("\n<SENT> %s", ReadBuf);
+				fflush(stdout);
+			}
+		}		
 	}
-	counter = 0;
 	//pthread_mutex_unlock(&mutex1);
 }
 
