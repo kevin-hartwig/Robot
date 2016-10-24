@@ -83,6 +83,12 @@ extern void stopDCMotor(void);
 void main(void) 
 {
 int servo_value = 0;
+int last_servo_value = 100;
+int last_stepper_value = 100;
+int stepper_abs_degree = 90;
+int last_DC_speed_value = 0;
+int last_DC_turn_value = 180;
+
 //LOCALS
 signed int  arguments[4];
 unsigned char stringArg[100];
@@ -148,12 +154,42 @@ DCinit();
 
   }     
 */  
-  
+
+
+ RTICTL_INIT = 0x70;  //SET STEPPER SPEED CONSTANT FOR NOW 
    
- for(;;)
-          
-      {
+ for(;;) {
       
+      // Check last_value's and modify flags as appropriate ///////////////////////
+      // SERVO //        
+      if (last_servo_value < 130 && target > 65) {
+        target--;
+      } else if (last_servo_value > 70 && target < 170) {
+        target++;
+      } 
+      
+      // STEPPER //
+      if (last_stepper_value > 130 || last_stepper_value < 70){   
+      
+          DisableInterrupts;   
+          
+          if (last_stepper_value > 130)
+             STEP_TYPE = 1;
+          else 
+             STEP_TYPE = -1;
+                   
+          NUMSTEPS = 0;
+          EXPECTED_STEPS = 10;  // (5 degrees per main loop iteration, have to multiply desired degree rotation by 2)
+
+          CURRENT_POSITION = CURRENT_POSITION + (STEP_TYPE*10); 
+          RTICTL = RTICTL_INIT; 
+          EnableInterrupts;
+      }
+                          
+        
+     
+     
+     // READ MESSAGE FROM RS-232 PORT /////////////////////////////////////////////
      if(readFlg == TRUE){
            //If new message clear buffer
            if(readChar == '<')
@@ -185,30 +221,24 @@ DCinit();
   
      } //end of readFLG
      
+     
+         
+         
+     //DECODE RS-232 RECEIVED COMMANDS////////////////////////////////////////////////  
+     
      if(CMDRDYflg == 1) {      
        
          DisableInterrupts;
          CMDRDYflg = 0;
          EnableInterrupts;
+           
          
        switch(inputBuf[0]) 
        {
         case('R') :
-          sscanf((const char *)inputBuf, "%s" "%d", discard, &servo_value);
-      
-          if (servo_value < 100) {
-            target -= 5;
-          } else if (servo_value > 100) {
-            target += 5;
-          }         
-          
-          // arguments[0] now holds the argument? Degrees?        
-          if(target < 65)
-            target = 65;
-          else if(target > 170)
-            target = 170;
-          enableServo();               
         
+          sscanf((const char *)inputBuf, "%s" "%d", discard, &last_servo_value);
+      
           break;
 
         case('P'):    
@@ -225,42 +255,10 @@ DCinit();
           
           break;
       
-        case('S'):
-       
+        case('S'):             
          
-         sscanf((const char *)inputBuf, "%s" "%d" "%d", discard, 
-          &arguments[0], &arguments[1]);
+          sscanf((const char *)inputBuf, "%s" "%d", discard, &last_stepper_value);
          
-      /* Arguments now hold, respectively, as integers:
-       *    0: SPEED 
-       *    1: DEGREE
-       */ 
-          DisableInterrupts;
-               
-         NUMSTEPS = 0;
-         EXPECTED_STEPS = 0;
-          
-          if(arguments[0] == 1)
-            RTICTL_INIT = 0x7F;
-          else if(arguments[0] == 2)
-            RTICTL_INIT = 0x5A;
-          else
-            RTICTL_INIT = 0x70;
-          
-          if (CURRENT_POSITION > arguments[1]) {       
-             STEP_TYPE = -1;
-             EXPECTED_STEPS = (CURRENT_POSITION - arguments[1]) * 2;             
-          } else {
-             STEP_TYPE = 1;
-             EXPECTED_STEPS = (arguments[1] - CURRENT_POSITION) * 2;
-          }  
-          
-          CURRENT_POSITION = arguments[1]; 
-          RTICTL = RTICTL_INIT; 
-          EnableInterrupts;
-          
-        //stepper_INIT();
-      
           break;
           
 
