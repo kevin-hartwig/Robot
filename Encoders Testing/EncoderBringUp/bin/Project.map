@@ -26,8 +26,8 @@ Entry point: 0xC029 (_Startup)
 _startupData is allocated at 0xC031 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
-  _Range   pZeroOut       0x900     32
-  _Copy    *toCopyDownBeg 0xC38D
+  _Range   pZeroOut       0x900     38
+  _Copy    *toCopyDownBeg 0xC450
 } _startupData;
 
 *********************************************************************************************
@@ -36,9 +36,10 @@ Section Name                    Size  Type     From       To       Segment
 ---------------------------------------------------------------------------------------------
 .init                             49     R     0xC000     0xC030   ROM_C000
 .startData                        10     R     0xC031     0xC03A   ROM_C000
-.text                            563     R     0xC03B     0xC26D   ROM_C000
-.copy                              2     R     0xC38D     0xC38E   ROM_C000
+.text                            758     R     0xC03B     0xC330   ROM_C000
+.copy                              7     R     0xC450     0xC456   ROM_C000
 .stack                           256   R/W      0x800      0x8FF   RAM
+.data                              2   R/W      0x900      0x901   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg1
 .abs_section_a                     1   N/I        0xA        0xA   .absSeg2
@@ -263,14 +264,14 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_ffee                  2     R     0xFFEE     0xFFEF   .absSeg221
 .abs_section_ffec                  2     R     0xFFEC     0xFFED   .absSeg222
 .abs_section_ffde                  2     R     0xFFDE     0xFFDF   .absSeg223
-.bss                              20   R/W      0x900      0x913   RAM
-RUNTIME                          287     R     0xC26E     0xC38C   ROM_C000
-.common                           12   R/W      0x914      0x91F   RAM
+.bss                              24   R/W      0x902      0x919   RAM
+RUNTIME                          287     R     0xC331     0xC44F   ROM_C000
+.common                           12   R/W      0x91A      0x925   RAM
 .vectSeg224_vect                   2     R     0xFFFE     0xFFFF   .vectSeg224
 
 Summary of section sizes per section type:
-READ_ONLY (R):         397 (dec:      919)
-READ_WRITE (R/W):      120 (dec:      288)
+READ_ONLY (R):         45F (dec:     1119)
+READ_WRITE (R/W):      126 (dec:      294)
 NO_INIT (N/I):         104 (dec:      260)
 
 *********************************************************************************************
@@ -504,13 +505,16 @@ MODULE:                 -- mc9s12c32.c.o --
      _PWMPER45                                   F6       2       2       2   .abs_section_f6
      _PWMDTY01                                   F8       2       2       0   .abs_section_f8
      _PWMDTY23                                   FA       2       2       0   .abs_section_fa
-     _PWMDTY45                                   FC       2       2       4   .abs_section_fc
+     _PWMDTY45                                   FC       2       2       6   .abs_section_fc
      _CANRXTSR                                  16E       2       2       0   .abs_section_16e
      _CANTXTSR                                  17E       2       2       0   .abs_section_17e
 MODULE:                 -- main.c.o --
 - PROCEDURES:
-     main                                      C03B      86     134       1   .text       
+     main                                      C03B     142     322       5   .text       
 - VARIABLES:
+     SETPOINT                                   900       2       2       8   .data       
+     SetSpeedR                                  902       2       2       4   .bss        
+     SetSpeedL                                  904       2       2       2   .bss        
 MODULE:                 -- Start12.c.o --
 - PROCEDURES:
      Init                                      C000      29      41       1   .init       
@@ -521,42 +525,42 @@ MODULE:                 -- Start12.c.o --
      __SEG_END_SSTACK                           900       0       0       1               
 MODULE:                 -- rtshc12.c.o (ansisi.lib) --
 - PROCEDURES:
-     _LMULU16x32                               C26E       F      15       1   RUNTIME     
-     _lDivMod                                  C27D      BE     190       3   RUNTIME     
-     _LDIVU                                    C33B       E      14       2   RUNTIME     
-     _NEG_P                                    C349       F      15       4   RUNTIME     
-     _LDIVS                                    C358      35      53       1   RUNTIME     
+     _LMULU16x32                               C331       F      15       3   RUNTIME     
+     _lDivMod                                  C340      BE     190       3   RUNTIME     
+     _LDIVU                                    C3FE       E      14       4   RUNTIME     
+     _NEG_P                                    C40C       F      15       4   RUNTIME     
+     _LDIVS                                    C41B      35      53       1   RUNTIME     
 - VARIABLES:
 MODULE:                 -- encoders.c.o --
 - PROCEDURES:
-     encodersInit                              C0C1      3D      61       1   .text       
-     checkOverflows                            C0FE      1E      30       2   .text       
-     convertTCNT                               C11C      16      22       1   .text       
-     convertFrequency                          C132      53      83       2   .text       
-     getCount                                  C185       E      14       1   .text       
-     RightWheel                                C193      4A      74       1   .text       
-     LeftWheel                                 C1DD      4A      74       1   .text       
-     timerOverFlow                             C227      11      17       1   .text       
+     encodersInit                              C17D      3D      61       1   .text       
+     checkOverflows                            C1BA      1E      30       2   .text       
+     convertTCNT                               C1D8      16      22       2   .text       
+     convertFrequency                          C1EE      5A      90       2   .text       
+     getCount                                  C248       E      14       1   .text       
+     RightWheel                                C256      4A      74       1   .text       
+     LeftWheel                                 C2A0      4A      74       1   .text       
+     timerOverFlow                             C2EA      11      17       1   .text       
 - VARIABLES:
-     R_Count                                    900       2       2       6   .bss        
-     L_Count                                    902       2       2       6   .bss        
-     overflowcountR                             904       2       2       7   .bss        
-     overflowcountL                             906       2       2       7   .bss        
-     periodticksR                               908       2       2       3   .bss        
-     periodticksL                               90A       2       2       3   .bss        
-     EdgeL_1                                    90C       2       2       4   .bss        
-     EdgeL_2                                    90E       2       2       4   .bss        
-     EdgeR_1                                    910       2       2       4   .bss        
-     EdgeR_2                                    912       2       2       4   .bss        
+     R_Count                                    906       2       2       6   .bss        
+     L_Count                                    908       2       2       6   .bss        
+     overflowcountR                             90A       2       2       7   .bss        
+     overflowcountL                             90C       2       2       7   .bss        
+     periodticksR                               90E       2       2       3   .bss        
+     periodticksL                               910       2       2       3   .bss        
+     EdgeL_1                                    912       2       2       4   .bss        
+     EdgeL_2                                    914       2       2       4   .bss        
+     EdgeR_1                                    916       2       2       4   .bss        
+     EdgeR_2                                    918       2       2       4   .bss        
      _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
      _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
      _Vector_16                                FFDE       2       2       0   .abs_section_ffde
-     MotorEncoderShaftSpeed                     914       4       4       3   .common     
-     MotorOutputFrequency                       918       4       4       3   .common     
-     FinalSpeed                                 91C       4       4       4   .common     
+     MotorEncoderShaftSpeed                     91A       4       4       2   .common     
+     MotorOutputFrequency                       91E       4       4       3   .common     
+     FinalSpeed                                 922       4       4       4   .common     
 MODULE:                 -- DCmotor.c.o --
 - PROCEDURES:
-     DCinit                                    C238      36      54       1   .text       
+     DCinit                                    C2FB      36      54       1   .text       
 - VARIABLES:
 
 *********************************************************************************************
@@ -564,12 +568,12 @@ MODULE STATISTIC
   Name                                      Data   Code  Const
 ---------------------------------------------------------------------------------------------
   mc9s12c32.c.o                              260      0      0
-  main.c.o                                     0    134      0
+  main.c.o                                     6    322      0
   Start12.c.o                                  0     49      0
   rtshc12.c.o (ansisi.lib)                     0    287      0
-  encoders.c.o                                32    375      6
+  encoders.c.o                                32    382      6
   DCmotor.c.o                                  0     54      0
-  other                                      256     12      2
+  other                                      256     12      7
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
@@ -577,9 +581,11 @@ SECTION USE IN OBJECT-ALLOCATION SECTION
 SECTION: ".text"
   main encodersInit checkOverflows convertTCNT convertFrequency getCount 
   RightWheel LeftWheel timerOverFlow DCinit 
+SECTION: ".data"
+  SETPOINT 
 SECTION: ".bss"
-  R_Count L_Count overflowcountR overflowcountL periodticksR periodticksL 
-  EdgeL_1 EdgeL_2 EdgeR_1 EdgeR_2 
+  SetSpeedR SetSpeedL R_Count L_Count overflowcountR overflowcountL 
+  periodticksR periodticksL EdgeL_1 EdgeL_2 EdgeR_1 EdgeR_2 
 SECTION: ".init"
   Init _Startup 
 SECTION: ".abs_section_8"
@@ -1150,7 +1156,7 @@ OBJECT LIST SORTED BY ADDRESS
      _PWMPER45                                   F6       2       2       2   .abs_section_f6
      _PWMDTY01                                   F8       2       2       0   .abs_section_f8
      _PWMDTY23                                   FA       2       2       0   .abs_section_fa
-     _PWMDTY45                                   FC       2       2       4   .abs_section_fc
+     _PWMDTY45                                   FC       2       2       6   .abs_section_fc
      _PWMSDN                                     FE       1       1       0   .abs_section_fe
      _FCLKDIV                                   100       1       1       0   .abs_section_100
      _FSEC                                      101       1       1       0   .abs_section_101
@@ -1260,36 +1266,39 @@ OBJECT LIST SORTED BY ADDRESS
      _RDRAD                                     273       1       1       0   .abs_section_273
      _PERAD                                     274       1       1       0   .abs_section_274
      _PPSAD                                     275       1       1       0   .abs_section_275
-     R_Count                                    900       2       2       6   .bss        
-     L_Count                                    902       2       2       6   .bss        
-     overflowcountR                             904       2       2       7   .bss        
-     overflowcountL                             906       2       2       7   .bss        
-     periodticksR                               908       2       2       3   .bss        
-     periodticksL                               90A       2       2       3   .bss        
-     EdgeL_1                                    90C       2       2       4   .bss        
-     EdgeL_2                                    90E       2       2       4   .bss        
-     EdgeR_1                                    910       2       2       4   .bss        
-     EdgeR_2                                    912       2       2       4   .bss        
-     MotorEncoderShaftSpeed                     914       4       4       3   .common     
-     MotorOutputFrequency                       918       4       4       3   .common     
-     FinalSpeed                                 91C       4       4       4   .common     
+     SETPOINT                                   900       2       2       8   .data       
+     SetSpeedR                                  902       2       2       4   .bss        
+     SetSpeedL                                  904       2       2       2   .bss        
+     R_Count                                    906       2       2       6   .bss        
+     L_Count                                    908       2       2       6   .bss        
+     overflowcountR                             90A       2       2       7   .bss        
+     overflowcountL                             90C       2       2       7   .bss        
+     periodticksR                               90E       2       2       3   .bss        
+     periodticksL                               910       2       2       3   .bss        
+     EdgeL_1                                    912       2       2       4   .bss        
+     EdgeL_2                                    914       2       2       4   .bss        
+     EdgeR_1                                    916       2       2       4   .bss        
+     EdgeR_2                                    918       2       2       4   .bss        
+     MotorEncoderShaftSpeed                     91A       4       4       2   .common     
+     MotorOutputFrequency                       91E       4       4       3   .common     
+     FinalSpeed                                 922       4       4       4   .common     
      Init                                      C000      29      41       1   .init       
      _Startup                                  C029       8       8       0   .init       
-     main                                      C03B      86     134       1   .text       
-     encodersInit                              C0C1      3D      61       1   .text       
-     checkOverflows                            C0FE      1E      30       2   .text       
-     convertTCNT                               C11C      16      22       1   .text       
-     convertFrequency                          C132      53      83       2   .text       
-     getCount                                  C185       E      14       1   .text       
-     RightWheel                                C193      4A      74       1   .text       
-     LeftWheel                                 C1DD      4A      74       1   .text       
-     timerOverFlow                             C227      11      17       1   .text       
-     DCinit                                    C238      36      54       1   .text       
-     _LMULU16x32                               C26E       F      15       1   RUNTIME     
-     _lDivMod                                  C27D      BE     190       3   RUNTIME     
-     _LDIVU                                    C33B       E      14       2   RUNTIME     
-     _NEG_P                                    C349       F      15       4   RUNTIME     
-     _LDIVS                                    C358      35      53       1   RUNTIME     
+     main                                      C03B     142     322       5   .text       
+     encodersInit                              C17D      3D      61       1   .text       
+     checkOverflows                            C1BA      1E      30       2   .text       
+     convertTCNT                               C1D8      16      22       2   .text       
+     convertFrequency                          C1EE      5A      90       2   .text       
+     getCount                                  C248       E      14       1   .text       
+     RightWheel                                C256      4A      74       1   .text       
+     LeftWheel                                 C2A0      4A      74       1   .text       
+     timerOverFlow                             C2EA      11      17       1   .text       
+     DCinit                                    C2FB      36      54       1   .text       
+     _LMULU16x32                               C331       F      15       3   RUNTIME     
+     _lDivMod                                  C340      BE     190       3   RUNTIME     
+     _LDIVU                                    C3FE       E      14       4   RUNTIME     
+     _NEG_P                                    C40C       F      15       4   RUNTIME     
+     _LDIVS                                    C41B      35      53       1   RUNTIME     
      _Vector_16                                FFDE       2       2       0   .abs_section_ffde
      _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
      _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
@@ -1315,7 +1324,13 @@ rtshc12.c.o (ansisi.lib):
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xC38D ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xC450 ---- SIZE       4 ---
+Filling bytes inserted
+ 00010901
+------- ROM-ADDRESS: 0xC454 ---- RAM-ADDRESS: 0x901 ---- SIZE       1 ---
+Name of initialized Object : SETPOINT:1
+ 0A
+------- ROM-ADDRESS: 0xC455 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1324,8 +1339,9 @@ OBJECT-DEPENDENCIES SECTION
 ---------------------------------------------------------------------------------------------
 Init                      USES _startupData 
 _Startup                  USES __SEG_END_SSTACK Init main 
-main                      USES encodersInit DCinit _PORTAB _PWMDTY45 
-                                checkOverflows convertTCNT convertFrequency getCount 
+main                      USES encodersInit DCinit _PORTAB SETPOINT main 
+                                _PWMDTY45 checkOverflows convertTCNT convertFrequency 
+                                _LMULU16x32 _LDIVU SetSpeedR SetSpeedL getCount 
 encodersInit              USES EdgeL_1 EdgeL_2 EdgeR_1 EdgeR_2 periodticksR 
                                 periodticksL overflowcountR overflowcountL R_Count L_Count 
                                 _TIOS _TCTL4 _TSCR1 _TSCR2 _TIE _TFLG1 
@@ -1376,6 +1392,10 @@ DEPENDENCY TREE
  |  |  |     
  |  |  +- _LMULU16x32         
  |  |       
+ |  +- _LMULU16x32          (see above)
+ |  |  
+ |  +- _LDIVU               (see above)
+ |  |  
  |  +- getCount            
  |       
  +- _Startup            
@@ -1403,5 +1423,5 @@ STATISTIC SECTION
 ExeFile:
 --------
 Number of blocks to be downloaded: 9
-Total size of all blocks to be downloaded: 919
+Total size of all blocks to be downloaded: 1119
 

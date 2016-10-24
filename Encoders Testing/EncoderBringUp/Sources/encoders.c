@@ -91,16 +91,21 @@ unsigned long convertTCNT(unsigned int TCNTDifference) {
    return(ECLOCK/(TCNTDifference*PRESCALER)); 
 }
 
+/******************************************************************/
+
 unsigned long convertFrequency(unsigned int frequency, int side) {
-                                                                                      // Carried over divide by 1000000
-   MotorEncoderShaftSpeed = frequency*100 / NUM_ENCODER_VANES;               // x27 
-   MotorOutputFrequency = MotorEncoderShaftSpeed / MOTOR_GEAR_RATIO;     // /225(overall, divided by 10)       (for Motor Gear Ratio)
    
+   DisableInterrupts;                                                             // Carried over divide by 1000000
+   MotorEncoderShaftSpeed = ((frequency*10)/27)*10;               // x27 
+   MotorOutputFrequency = MotorEncoderShaftSpeed / MOTOR_GEAR_RATIO;     // /225(overall, divided by 10)       (for Motor Gear Ratio)
+   EnableInterrupts; 
    if (side == RIGHT_WHEEL)
         FinalSpeed = PI*WHEEL_DIAMETER_R*(MotorOutputFrequency);                // (overall, multiplied by 100)   (for PI) 
    else if (side == LEFT_WHEEL)
         FinalSpeed = PI*WHEEL_DIAMETER_L*(MotorOutputFrequency);                                                                                   // ---------------------------
-   return(FinalSpeed/1000); //divide by 10000                                        // (overall, divide by 10)        (to restore final value)
+   return(FinalSpeed/1000); //divide by 1000 TO YEILD 1 DECIMAL PLACE  (CM/s) 
+                            //Also equates to mm/s
+                            // (overall, divide by 10)        (to restore final value)
 
 }
 
