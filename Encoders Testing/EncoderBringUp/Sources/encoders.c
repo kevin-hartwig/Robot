@@ -91,13 +91,16 @@ unsigned long convertTCNT(unsigned int TCNTDifference) {
    return(ECLOCK/(TCNTDifference*PRESCALER)); 
 }
 
-unsigned long convertFrequency(unsigned int frequency) {
+unsigned long convertFrequency(unsigned int frequency, int side) {
                                                                                       // Carried over divide by 1000000
    MotorEncoderShaftSpeed = frequency*100 / NUM_ENCODER_VANES;               // x27 
    MotorOutputFrequency = MotorEncoderShaftSpeed / MOTOR_GEAR_RATIO;     // /225(overall, divided by 10)       (for Motor Gear Ratio)
-   FinalSpeed = PI*WHEEL_DIAMETER*(MotorOutputFrequency);                // (overall, multiplied by 100)   (for PI) 
-                                                                                      // ---------------------------
-   return(FinalSpeed/10000); //divide by 10000                                        // (overall, divide by 10)        (to restore final value)
+   
+   if (side == RIGHT_WHEEL)
+        FinalSpeed = PI*WHEEL_DIAMETER_R*(MotorOutputFrequency);                // (overall, multiplied by 100)   (for PI) 
+   else if (side == LEFT_WHEEL)
+        FinalSpeed = PI*WHEEL_DIAMETER_L*(MotorOutputFrequency);                                                                                   // ---------------------------
+   return(FinalSpeed/1000); //divide by 10000                                        // (overall, divide by 10)        (to restore final value)
 
 }
 
@@ -114,7 +117,7 @@ unsigned int getCount(int side) {
 */
 
 interrupt 8 void RightWheel( void ) { 
-   R_Count++;                  // 
+   R_Count++;                  // Increment right rising edge count variable 
    
    (void)TC0;                  // Pay the pizza guy
    
@@ -136,7 +139,7 @@ interrupt 8 void RightWheel( void ) {
 }
 
 interrupt 9 void LeftWheel( void ) {      
-   L_Count++;                  // Increment Left Motor Vein Count Variable
+   L_Count++;                  // Increment left rising edge count variable
    
    (void)TC1;                  // Pay the pizza guy
    
@@ -151,7 +154,7 @@ interrupt 9 void LeftWheel( void ) {
     if (overflowcountL) {        //TCNT Overflowed
         periodticksL = (TCNTMAX*overflowcountL)-EdgeL_1+EdgeL_2;      
      } else
-        periodticksL = (EdgeR_2 - EdgeR_1);
+        periodticksL = (EdgeL_2 - EdgeL_1);
      
    }    
   

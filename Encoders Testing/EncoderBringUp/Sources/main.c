@@ -12,7 +12,8 @@ void main(void) {
   int DistanceTravelled = 0;
   unsigned int frequency = 0;
   unsigned long ticks = 0;
-  unsigned long speed = 0; 
+  unsigned long speedR = 0; 
+  unsigned long speedL = 0;
   unsigned long TCNT_VAR = 0; 	
 	  
 	encodersInit();
@@ -23,19 +24,29 @@ void main(void) {
 	
 	
   DC_MOTOR_PORT = 0b00001010;
-  PWMDTY5 = ((-127*(10))/100)+127;
-  PWMDTY4 = ((-127*(10))/100)+127;
+  PWMDTY5 = ((-127*(50))/100)+127;
+  PWMDTY4 = ((-127*(50))/100)+127;
 
-  for(;;) {   
+  for(;;) { 
   
+     //Right Wheel  
      if (!checkOverflows(RIGHT_WHEEL)) 
         ticks = getCount(RIGHT_WHEEL);
      else 
         ticks = 0;
      frequency = convertTCNT(ticks);
-     speed = convertFrequency(frequency);   
-     TCNT_VAR = TCNT;  
-  
+     speedR = convertFrequency(frequency, RIGHT_WHEEL);  
+     
+     
+     
+     //Left Wheel
+     if (!checkOverflows(LEFT_WHEEL)) 
+        ticks = getCount(LEFT_WHEEL);
+     else 
+        ticks = 0;
+     frequency = convertTCNT(ticks);
+     speedL = convertFrequency(frequency, LEFT_WHEEL);   
+    
   
   
     _FEED_COP(); /* feeds the dog */

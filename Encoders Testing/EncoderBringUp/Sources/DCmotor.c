@@ -22,7 +22,7 @@ DC_MOTOR_DDR =  0b00001111;
 
 
 PWMCTL = 0;        // 8-bit mode
-PWMPRCLK = 0;      // count E-clocks directly – don’t prescale
+//PWMPRCLK = 0;      // count E-clocks directly – don’t prescale
 PWMSCLA = 1;
 PWMCLK = 3;        // Set scaling factor to divide by 2 (channel 0 and 1)
 
