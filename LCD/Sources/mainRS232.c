@@ -82,6 +82,7 @@ extern void stopDCMotor(void);
 *****************************************************************/  
 void main(void) 
 {
+int servo_value = 0;
 //LOCALS
 signed int  arguments[4];
 unsigned char stringArg[100];
@@ -89,7 +90,7 @@ unsigned char discard[10];
 int j = 0;
 int k = 0;
 int CMDRDYflg = 0;
-SCIBD = 52; //baud clock for 9600 with 8MHz E-clock 
+SCIBD = 13; //baud clock for 9600 with 8MHz E-clock 
 SCICR1 = 0; //N81 data
 
 // turn on transmitter and receiver
@@ -193,15 +194,20 @@ DCinit();
        switch(inputBuf[0]) 
        {
         case('R') :
-          sscanf((const char *)inputBuf, "%s" "%d", discard, &target);
+          sscanf((const char *)inputBuf, "%s" "%d", discard, &servo_value);
       
+          if (servo_value < 100) {
+            target -= 5;
+          } else if (servo_value > 100) {
+            target += 5;
+          }         
+          
           // arguments[0] now holds the argument? Degrees?        
           if(target < 65)
             target = 65;
           else if(target > 170)
             target = 170;
-          //enableServo();
-          
+          enableServo();               
         
           break;
 
@@ -290,13 +296,13 @@ DCinit();
           LCDprintCMD("- Error - ");
      }
         //This delay is to compensate for linux read
-               for (i = 0 ; i < INT_MAX ; i++)
+            /*   for (i = 0 ; i < INT_MAX ; i++)
                   for (k = 0 ; k < 40 ; k++);
                //Handshake with linux supervisor
                for (i = 0 ; i < 6 ;){                       
                    if ((SCISR1 & SCISR1_TDRE_MASK))
                       SCIDRL = inputBuf[i++];              
-               }
+               }   */
             
      }       
  }
