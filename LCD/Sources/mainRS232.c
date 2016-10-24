@@ -122,6 +122,8 @@ DCinit();
 
   //encodersInit();
   
+  enableServo();
+  
   
   for(;;)
 
@@ -198,7 +200,7 @@ DCinit();
             target = 65;
           else if(target > 170)
             target = 170;
-          enableServo();
+          //enableServo();
           
         
           break;

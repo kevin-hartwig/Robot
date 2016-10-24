@@ -24,8 +24,8 @@ void main(void) {
 	
 	
   DC_MOTOR_PORT = 0b00001010;
-  PWMDTY5 = ((-127*(50))/100)+127;
-  PWMDTY4 = ((-127*(50))/100)+127;
+  PWMDTY5 = ((-127*(100))/100)+127;
+  PWMDTY4 = ((-127*(100))/100)+127;
 
   for(;;) { 
   
@@ -44,7 +44,7 @@ void main(void) {
         ticks = getCount(LEFT_WHEEL);
      else 
         ticks = 0;
-     frequency = convertTCNT(ticks);
+     //frequency = convertTCNT(ticks);
      speedL = convertFrequency(frequency, LEFT_WHEEL);   
     
   
