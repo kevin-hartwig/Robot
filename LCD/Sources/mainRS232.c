@@ -83,6 +83,8 @@ extern void stopDCMotor(void);
 void main(void) 
 {
 int servo_value = 0;
+int last_servo_value = 100;
+int last_stepper_value = 100;
 //LOCALS
 signed int  arguments[4];
 unsigned char stringArg[100];
@@ -125,8 +127,6 @@ DCinit();
   
   enableServo();
   
-  
-  for(;;)
 
   
 
@@ -153,6 +153,34 @@ DCinit();
  for(;;)
           
       {
+      
+      // Check last_value's and modify flags as appropriate ///////////////////////
+      // SERVO //        
+      if (last_servo_value > 130 && target > 65) {
+        target--;
+      } else if (last_servo_value < 70 && target < 170) {
+        target++;
+      } 
+      
+      // STEPPER //
+      if (last_stepper_value > 130 || last_stepper_value < 70){   
+      
+          DisableInterrupts;   
+          
+          if (last_stepper_value > 130)
+             STEP_TYPE = 1;
+          else 
+             STEP_TYPE = -1;
+                   
+          NUMSTEPS = 0;
+          EXPECTED_STEPS = 20;  // (5 degrees per main loop iteration, have to multiply desired degree rotation by 2)
+
+          CURRENT_POSITION = CURRENT_POSITION + (STEP_TYPE*20); 
+          RTICTL = RTICTL_INIT; 
+          EnableInterrupts;
+      }
+                          
+        
       
      if(readFlg == TRUE){
            //If new message clear buffer
@@ -194,20 +222,8 @@ DCinit();
        switch(inputBuf[0]) 
        {
         case('R') :
-          sscanf((const char *)inputBuf, "%s" "%d", discard, &servo_value);
-      
-          if (servo_value < 100) {
-            target -= 5;
-          } else if (servo_value > 100) {
-            target += 5;
-          }         
-          
-          // arguments[0] now holds the argument? Degrees?        
-          if(target < 65)
-            target = 65;
-          else if(target > 170)
-            target = 170;
-          enableServo();               
+          sscanf((const char *)inputBuf, "%s" "%d", discard, &last_servo_value);
+                   
         
           break;
 
@@ -228,38 +244,8 @@ DCinit();
         case('S'):
        
          
-         sscanf((const char *)inputBuf, "%s" "%d" "%d", discard, 
-          &arguments[0], &arguments[1]);
-         
-      /* Arguments now hold, respectively, as integers:
-       *    0: SPEED 
-       *    1: DEGREE
-       */ 
-          DisableInterrupts;
-               
-         NUMSTEPS = 0;
-         EXPECTED_STEPS = 0;
-          
-          if(arguments[0] == 1)
-            RTICTL_INIT = 0x7F;
-          else if(arguments[0] == 2)
-            RTICTL_INIT = 0x5A;
-          else
-            RTICTL_INIT = 0x70;
-          
-          if (CURRENT_POSITION > arguments[1]) {       
-             STEP_TYPE = -1;
-             EXPECTED_STEPS = (CURRENT_POSITION - arguments[1]) * 2;             
-          } else {
-             STEP_TYPE = 1;
-             EXPECTED_STEPS = (arguments[1] - CURRENT_POSITION) * 2;
-          }  
-          
-          CURRENT_POSITION = arguments[1]; 
-          RTICTL = RTICTL_INIT; 
-          EnableInterrupts;
-          
-        //stepper_INIT();
+         sscanf((const char *)inputBuf, "%s" "%d", discard, &last_stepper_value);
+      
       
           break;
           
