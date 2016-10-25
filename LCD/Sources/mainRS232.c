@@ -114,7 +114,7 @@ testAtoi = atoi("F");
  
 /****** SETUP STEPPER *********/
  stepper_INIT();
- stepper_homing();
+ //stepper_homing();
 
 /****** SETUP DC MOTOR *********/
 DCinit(); 
@@ -151,38 +151,40 @@ DCinit();
 */  
   
   
- for(;;)
-          
-      {
-      
-      // Check last_value's and modify flags as appropriate ///////////////////////
-      // SERVO //        
-      if (last_servo_value > 130 && target > 65) {
-        target--;
-      } else if (last_servo_value < 70 && target < 170) {
-        target++;
-      } 
-      
+ for(;;) {
       counter++;
-      DisableInterrupts;
-      // STEPPER //
-      if ((last_stepper_value > 150 || last_stepper_value < 50) && counter == 100){   
-      
-          counter = 0;   
+ 
+      if (counter == 10000){
+          counter = 0;
+            
+          // Check last_value's and modify flags as appropriate ///////////////////////
+          // SERVO //        
+          if (last_servo_value > 180 && target < 170 ) {
+            target++;
+          } else if (last_servo_value < 20 && target > 65) {
+            target--;
+          } 
           
-          if (last_stepper_value > 150)
-             STEP_TYPE = 1;
-          else 
-             STEP_TYPE = -1;
-                   
-          NUMSTEPS = 0;
-          EXPECTED_STEPS = 20;  // (5 degrees per main loop iteration, have to multiply desired degree rotation by 2)
+          
+          // STEPPER //
+          if ((last_stepper_value > 150 || last_stepper_value < 50)){   
+          
+              counter = 0;   
+              
+              if (last_stepper_value > 150)
+                 STEP_TYPE = 1;
+              else 
+                 STEP_TYPE = -1;
+                       
+              NUMSTEPS = 0;
+              EXPECTED_STEPS = 1;  // (5 degrees per main loop iteration, have to multiply desired degree rotation by 2)
 
-          CURRENT_POSITION = CURRENT_POSITION + (STEP_TYPE*20); 
-          RTICTL = RTICTL_INIT; 
+              CURRENT_POSITION = CURRENT_POSITION + (STEP_TYPE*1); 
+              RTICTL = RTICTL_INIT; 
+              
+          } 
           
       }
-      EnableInterrupts;                    
         
       
      if(readFlg == TRUE){
@@ -254,7 +256,7 @@ DCinit();
           
 
         
-        case('H'):
+        case('A'):
           
           homingHit = 0;
           
