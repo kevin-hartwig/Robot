@@ -121,59 +121,57 @@ void stepper_homing(void){
 
 interrupt 7 void RTI_Interrupt(){
 
-static int limitFLG = 0;  //check if limit flag has been set
+  static int limitFLG = 0;  //check if limit flag has been set
 
-CRGFLG = mCRGFLG_RTIF;  //clear any possibly pending interrupts    //april 13 uncomment
+  CRGFLG = mCRGFLG_RTIF;  //clear any possibly pending interrupts    //april 13 uncomment
 
-if(NUMSTEPS <= EXPECTED_STEPS) {
+  if(NUMSTEPS <= EXPECTED_STEPS) {
 
-//check if limit switch is pressed, if pressed do nothing...........
-if(   ( (LIMIT_SWITCH_LEFT & LIMIT_SWITCH) || (LIMIT_SWITCH_RIGHT & LIMIT_SWITCH))  &&  !limitFLG  )  {
-checkLIMIT++;
+    //check if limit switch is pressed, if pressed do nothing...........
+    if(   ( (LIMIT_SWITCH_LEFT & LIMIT_SWITCH) || (LIMIT_SWITCH_RIGHT & LIMIT_SWITCH))  &&  !limitFLG  )  {
+      checkLIMIT++;
 
-if(STEP_TYPE > 0)
-  CURRENT_POSITION = 180;
-if(STEP_TYPE < 0)
-  CURRENT_POSITION = 0;
+      if(STEP_TYPE > 0)
+        CURRENT_POSITION = 180;
+      if(STEP_TYPE < 0)
+        CURRENT_POSITION = 0;
 
-NUMSTEPS = EXPECTED_STEPS;
+      NUMSTEPS = EXPECTED_STEPS;
 
-STEP_TYPE = STEP_TYPE * -1;
+      STEP_TYPE = STEP_TYPE * -1;
 
-NUMSTEPS = 0;
-EXPECTED_STEPS = 10;
+      NUMSTEPS = 0;
+      EXPECTED_STEPS = 10;
 
-limitFLG = 10;
+      limitFLG = 10;
 
-homingHit++;
-if(homingHit == 1){
-  //STEP_TYPE = -1;
-  EXPECTED_STEPS = 10000;
+      homingHit++;
+      if(homingHit == 1){
+        //STEP_TYPE = -1;
+        EXPECTED_STEPS = 10000;
 
-} 
-else if(homingHit == 2){
-  EXPECTED_STEPS = stepCount/2;
-  CURRENT_POSITION = 90;
-}
-}
-
-else{
-      
-    CUR_PAT = ((CUR_PAT+STEP_TYPE) & 0b00000111) ;
-    value = posTable[ CUR_PAT ];
-    value <<= 4;
-
-    STEPPER_MOTOR_PORT &= ~(0b11110000);
-    STEPPER_MOTOR_PORT |= value; 
-
-    NUMSTEPS = NUMSTEPS + abs(STEP_TYPE);
-    if (limitFLG > 0)
-    limitFLG--;
-    
-    if (homingHit == 1) {
-      stepCount++;
+      } else if(homingHit == 2){
+        EXPECTED_STEPS = stepCount/2;
+        CURRENT_POSITION = 90;
+      }
     }
-  }//end else
-}
+
+    else{     // Limit switch not pressed           
+        CUR_PAT = ((CUR_PAT+STEP_TYPE) & 0b00000111) ;
+        value = posTable[ CUR_PAT ];
+        value <<= 4;
+
+        STEPPER_MOTOR_PORT &= ~(0b11110000);
+        STEPPER_MOTOR_PORT |= value; 
+
+        NUMSTEPS = NUMSTEPS + abs(STEP_TYPE);
+        if (limitFLG > 0)
+        limitFLG--;
+        
+        if (homingHit == 1) {
+          stepCount++;
+        }
+      }//end else
+  }
 
 }

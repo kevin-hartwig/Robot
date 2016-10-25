@@ -82,9 +82,10 @@ extern void stopDCMotor(void);
 *****************************************************************/  
 void main(void) 
 {
-int servo_value = 0;
+int servo_value = 90;
 int last_servo_value = 100;
 int last_stepper_value = 100;
+int counter = 0; 
 //LOCALS
 signed int  arguments[4];
 unsigned char stringArg[100];
@@ -92,7 +93,7 @@ unsigned char discard[10];
 int j = 0;
 int k = 0;
 int CMDRDYflg = 0;
-SCIBD = 52; //baud clock for 9600 with 8MHz E-clock 
+SCIBD = 13; //baud clock for 9600 (52 i think?) or 38400 (13) with 8MHz E-clock 
 SCICR1 = 0; //N81 data
 
 // turn on transmitter and receiver
@@ -149,7 +150,7 @@ DCinit();
   }     
 */  
   
-   
+  
  for(;;)
           
       {
@@ -162,12 +163,14 @@ DCinit();
         target++;
       } 
       
+      counter++;
+      DisableInterrupts;
       // STEPPER //
-      if (last_stepper_value > 130 || last_stepper_value < 70){   
+      if ((last_stepper_value > 150 || last_stepper_value < 50) && counter == 100){   
       
-          DisableInterrupts;   
+          counter = 0;   
           
-          if (last_stepper_value > 130)
+          if (last_stepper_value > 150)
              STEP_TYPE = 1;
           else 
              STEP_TYPE = -1;
@@ -177,9 +180,9 @@ DCinit();
 
           CURRENT_POSITION = CURRENT_POSITION + (STEP_TYPE*20); 
           RTICTL = RTICTL_INIT; 
-          EnableInterrupts;
+          
       }
-                          
+      EnableInterrupts;                    
         
       
      if(readFlg == TRUE){
