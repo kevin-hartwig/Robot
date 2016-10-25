@@ -92,7 +92,7 @@ unsigned char discard[10];
 int j = 0;
 int k = 0;
 int CMDRDYflg = 0;
-SCIBD = 13; //baud clock for 9600 with 8MHz E-clock 
+SCIBD = 52; //baud clock for 9600 with 8MHz E-clock 
 SCICR1 = 0; //N81 data
 
 // turn on transmitter and receiver
