@@ -38,13 +38,8 @@ void encodersInit(void) {
   
   MAKE_CHNL_IC(RIGHT_WHEEL);   // Configure timer channels for input capture
   MAKE_CHNL_IC(LEFT_WHEEL);
-  
-  TCTL4 = 0b00001010;          // Hardware will detect only rising edges - Last 4 bits represent timer channels 1, 0 (respectively)              
-  
-  //REMOVE WHEN INTEGRATING
-    //TSCR1 = 0b10110000;        // starting Tcount , enabling freeze, and enabling fast clear 
-    //TSCR2 = 0b00000011;        // setting prescaler to 8 (last 3 bits)  
-    //TSCR2 = 0x83;             
+   
+  TCTL4 = 0b00001010;          // Hardware will detect only rising edges - Last 4 bits represent timer channels 1, 0 (respectively)                  
   
   TIE |= 0b00000011;            // Enable interrupts on channel 0 & 1
   
@@ -143,10 +138,11 @@ unsigned int getCount(int side) {
 */
 
 interrupt 8 void RightWheel( void ) { 
+
    R_Count++;                  // Increment right rising edge count variable 
    
    (void)TC0;                  // Pay the pizza guy
-   
+
    if (R_Count == 1) {
     overflowcountR = 0;
     EdgeR_1 = TCNT;
@@ -161,14 +157,16 @@ interrupt 8 void RightWheel( void ) {
         periodticksR = (EdgeR_2 - EdgeR_1);
     
    }
+
         
 }
 
 interrupt 9 void LeftWheel( void ) {      
+
    L_Count++;                  // Increment left rising edge count variable
    
    (void)TC1;                  // Pay the pizza guy
-   
+  
    if (L_Count == 1) {
     overflowcountL = 0;
     EdgeL_1 = TCNT;
@@ -182,7 +180,7 @@ interrupt 9 void LeftWheel( void ) {
      } else
         periodticksL = (EdgeL_2 - EdgeL_1);
      
-   }    
+   }   
   
 }
 

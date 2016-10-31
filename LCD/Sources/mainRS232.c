@@ -26,7 +26,7 @@
 volatile int readFlg = FALSE;
 
 //DC Motor Setpoint
-int SETPOINT = 50;
+int SETPOINT = 0;
 
 int servoFlg = FALSE;
 volatile int i = 0;
@@ -115,6 +115,8 @@ void main(void)
   int last_servo_value = 100;
   int last_stepper_value = 100;
   int counter = 0; 
+  
+  int desired_speed = 100;
   //LOCALS
   signed int  arguments[4];
   unsigned char stringArg[100];
@@ -129,10 +131,9 @@ void main(void)
 
 
 
-
+  /******* RS-232 SETUP *********/
   SCIBD = 13; //baud clock for 9600 (52 i think?) or 38400 (13) with 8MHz E-clock 
-  SCICR1 = 0; //N81 data
-
+  SCICR1 = 0; //N81 data      
   // turn on transmitter and receiver
   SCICR2 = (SCICR2_RE_MASK | SCICR2_TE_MASK |SCICR2_RIE_MASK ); //SCICR2_TCIE_MASK);
 
@@ -179,11 +180,16 @@ void main(void)
   
   EnableInterrupts;
   
- /** Main Application Infinite Loop START **/ 
+ /** Main Application Loop START **/ 
  for(;;) {
   
  
-    /****************************************************
+   /* PID Control Block *********************************/
+   iterationCounter++;
+   
+   if (iterationCounter == 10000) {
+   
+   /****************************************************
     Calculations for Wheel Speeds
     *****************************************************/
      //Right Wheel  
@@ -203,10 +209,7 @@ void main(void)
     speedL = convertFrequency(frequencyL, LEFT_WHEEL);   
    /*****************************************************/ 
 
-   /* PID Control Block *********************************/
-   iterationCounter++;
    
-   if (iterationCounter == 200) {
     iterationCounter = 0;
     errorR = SETPOINT - speedR;
     errorL = SETPOINT - speedL;
@@ -215,28 +218,28 @@ void main(void)
     PWMDTY4 = 140 - (((900/59)*(SetSpeedR))/10); 
     PWMDTY5 = 140 - (((900/59)*(SetSpeedL))/10);        
    }/* PID Control Block END ****************************/  
-
+ 
  
       counter++;
  
-      if (counter == 10000){
+      if (counter == 100){
           counter = 0;
             
           // Check last_value's and modify flags as appropriate ///////////////////////
           // SERVO //        
-          if (last_servo_value > 180 && target < 170 ) {
+          if (last_servo_value > 100 && target < 170 ) {
             target++;
-          } else if (last_servo_value < 20 && target > 65) {
+          } else if (last_servo_value < 100 && target > 65) {
             target--;
           } 
           
           
           // STEPPER //
-          if ((last_stepper_value > 150 || last_stepper_value < 50)){   
+          if ((last_stepper_value > 100 || last_stepper_value < 100)){   
           
               counter = 0;   
               
-              if (last_stepper_value > 150)
+              if (last_stepper_value > 100)
                  STEP_TYPE = 1;
               else 
                  STEP_TYPE = -1;
@@ -328,6 +331,22 @@ void main(void)
             
             stepper_homing();
             break;
+            
+          case('Y'):
+            sscanf((const char *)inputBuf, "%s" "%d", discard, &desired_speed);
+            
+            if (desired_speed > 100){           // FORWARD
+              DC_MOTOR_PORT = 0b00001010;
+              SETPOINT = ((desired_speed - 100)*59)/100;
+            }
+            else if (desired_speed < 100) {     // BACKWARD
+              DC_MOTOR_PORT = 0b00000101;
+              SETPOINT = (((desired_speed - 100)*59)/100)*-1;
+            }
+            
+            
+            
+            break;
        
           case('D'):   
           //arguments[0] = Direction
@@ -350,6 +369,7 @@ void main(void)
             break;
           
           default:
+            i++;
             LCDprintCMD("- Error - ");
        }
         
@@ -373,7 +393,7 @@ interrupt 20 void SCI_Interrupt(){
 
 int j=0;
 
-  i++;
+  //i++;
 
    if ((SCISR1 & SCISR1_RDRF_MASK)) 
   //reading

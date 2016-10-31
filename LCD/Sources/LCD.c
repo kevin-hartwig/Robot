@@ -107,7 +107,7 @@
 #define MAKE_CHNL_OC( chnl ) SET_BITS( TIOS, 1 << (chnl) )
 
 //To make a timer channel IC, input compare
-#define MAKE_CHNL_IC( chnl ) CLR_BITS( TIOS, 1 << (chnl) )
+//#define MAKE_CHNL_IC( chnl ) CLR_BITS( TIOS, 1 << (chnl) )
 
 #define CLR_TIMER_CHNL_FLAG( chnl )	TFLG1 = (1 << (chnl))
 
@@ -269,7 +269,7 @@ void LCDdata(unsigned char data) {
   LCD_E_HI;
   LCD_BUS(LO_NYBBLE(data));
   LCD_E_LO;
-  msDelay(3); 
+  //msDelay(3); 
   
 }
 
@@ -291,7 +291,7 @@ void LCDcmd(unsigned char data) {
   LCD_E_HI;
   LCD_BUS(LO_NYBBLE(data));
   LCD_E_LO;
-  msDelay(3); 
+  //msDelay(3); 
   
 }
 
