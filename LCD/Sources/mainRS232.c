@@ -104,6 +104,12 @@ static unsigned long ticks = 0;
 static unsigned long TCNT_VAR = 0; 
 static int iterationCounter = 0;
 
+  
+int desired_speed = 100;
+int turning_percent = 100;
+int right_adjust = 0;
+int left_adjust = 0;
+
 SPid PIDControl;
 
 long errorR = 0;
@@ -115,8 +121,7 @@ void main(void)
   int last_servo_value = 100;
   int last_stepper_value = 100;
   int counter = 0; 
-  
-  int desired_speed = 100;
+
   //LOCALS
   signed int  arguments[4];
   unsigned char stringArg[100];
@@ -211,8 +216,8 @@ void main(void)
 
    
     iterationCounter = 0;
-    errorR = SETPOINT - speedR;
-    errorL = SETPOINT - speedL;
+    errorR = (SETPOINT - right_adjust) - speedR;
+    errorL = (SETPOINT - left_adjust) - speedL;
     SetSpeedR = UpdatePID(&PIDControl, errorR, speedR);
     SetSpeedL = UpdatePID(&PIDControl, errorL, speedL);    
     PWMDTY4 = 140 - (((900/59)*(SetSpeedR))/10); 
@@ -342,10 +347,25 @@ void main(void)
             else if (desired_speed < 100) {     // BACKWARD
               DC_MOTOR_PORT = 0b00000101;
               SETPOINT = (((desired_speed - 100)*59)/100)*-1;
+            }        
+            
+            break;
+            
+          case('X'):
+          
+            sscanf((const char *)inputBuf, "%s" "%d", discard, &turning_percent);              
+            
+            if (turning_percent > 100){           // FORWARD
+              right_adjust = ((turning_percent - 100)*59)/100;
             }
-            
-            
-            
+            else if (turning_percent < 100) {     // BACKWARD
+              left_adjust = (((turning_percent - 100)*59)/100)*-1;
+            } 
+            else if (turning_percent == 100) {
+              left_adjust = 0;
+              right_adjust = 0;
+            }
+          
             break;
        
           case('D'):   
