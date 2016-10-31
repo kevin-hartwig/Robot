@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "encoders.h"
 #include "utils.h"
 //#include <string.h>
 
@@ -24,6 +24,9 @@
 *
 *****************************************************************/
 volatile int readFlg = FALSE;
+
+//DC Motor Setpoint
+int SETPOINT = 50;
 
 int servoFlg = FALSE;
 volatile int i = 0;
@@ -42,6 +45,16 @@ extern int NUMSTEPS;
 extern int EXPECTED_STEPS;
 extern int CURRENT_POSITION;
 extern volatile int homingHit;
+
+//ENCODERS
+extern int getDistance(int wheel);
+extern signed int convertFrequency(unsigned int frequency, int side);
+extern unsigned long convertTCNT(unsigned int TCNTDifference);
+extern int UpdatePID(struct SPid * pid, int error, int position);
+extern int getCounter(void);
+extern unsigned int getCount(int side);
+extern int checkOverflows(int side);
+//extern interrupt 16 void timerOverFlow(void);
           
 
 //DC MOTOR
@@ -80,26 +93,58 @@ extern void stopDCMotor(void);
 * outputs: N/A 
 *
 *****************************************************************/  
+// ENCODER AND DC MOTOR VARIABLES / / / / / / / / / / / / / / / / / /
+static long SetSpeedR = 0;
+static long SetSpeedL = 0;
+
+static int DistanceTravelled = 0;
+static unsigned int frequencyR = 0, frequencyL = 0;
+static unsigned long ticks = 0;
+
+static unsigned long TCNT_VAR = 0; 
+static int iterationCounter = 0;
+
+SPid PIDControl;
+
+long errorR = 0;
+long errorL = 0;
+// / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
 void main(void) 
 {
-int servo_value = 90;
-int last_servo_value = 100;
-int last_stepper_value = 100;
-int counter = 0; 
-//LOCALS
-signed int  arguments[4];
-unsigned char stringArg[100];
-unsigned char discard[10];
-int j = 0;
-int k = 0;
-int CMDRDYflg = 0;
-SCIBD = 13; //baud clock for 9600 (52 i think?) or 38400 (13) with 8MHz E-clock 
-SCICR1 = 0; //N81 data
+  int servo_value = 90;
+  int last_servo_value = 100;
+  int last_stepper_value = 100;
+  int counter = 0; 
+  //LOCALS
+  signed int  arguments[4];
+  unsigned char stringArg[100];
+  unsigned char discard[10];
+  int j = 0;
+  int k = 0;
+  int CMDRDYflg = 0;
+  
+  signed int speedR = 0; 
+  signed int speedL = 0;
 
-// turn on transmitter and receiver
-SCICR2 = (SCICR2_RE_MASK | SCICR2_TE_MASK |SCICR2_RIE_MASK ); //SCICR2_TCIE_MASK);
 
-testAtoi = atoi("F");
+
+
+
+  SCIBD = 13; //baud clock for 9600 (52 i think?) or 38400 (13) with 8MHz E-clock 
+  SCICR1 = 0; //N81 data
+
+  // turn on transmitter and receiver
+  SCICR2 = (SCICR2_RE_MASK | SCICR2_TE_MASK |SCICR2_RIE_MASK ); //SCICR2_TCIE_MASK);
+
+  testAtoi = atoi("F");
+
+/******* ENCODER SETUP *********/
+  PIDControl.pGain = 1;
+  PIDControl.iGain = 1;
+  PIDControl.iMin = 0;
+  PIDControl.iMax = 59;
+  
+  
 
 
 /******* SETUPS SERVO **********/
@@ -113,45 +158,65 @@ testAtoi = atoi("F");
  
  
 /****** SETUP STEPPER *********/
- stepper_INIT();
- //stepper_homing();
+  stepper_INIT();
+  stepper_homing();
 
 /****** SETUP DC MOTOR *********/
-DCinit(); 
- 
-  EnableInterrupts;
+  DCinit();         
+
   LCDprintf("-- Hi I'm Rob --");
   
 /****** SETUP ENCODERS ********/
 
-  //encodersInit();
   
   enableServo();
   
-
+  PWMDTY4 = 140 - (((900/59)*(SETPOINT))/10); 
+  PWMDTY5 = 140 - (((900/59)*(SETPOINT))/10);
+  DC_MOTOR_PORT = 0b00001010;
   
-
-/* TRANSMIT TO PSP TESTING ***** 
-  for(;;)
-  {
-      char * s = "HI OVI";
- 
-      for (i = 0 ; i < 6 ;){
-             
-         if ((SCISR1 & SCISR1_TDRE_MASK))
-          SCIDRL = s[i++];
-         
-      }
-
-      for (i = 0 ; i < INT_MAX ; i++) {         
-        for (k = 0 ; k < 60 ; k++);
-      }
-
-  }     
-*/  
+  encodersInit();
   
+  EnableInterrupts;
   
+ /** Main Application Infinite Loop START **/ 
  for(;;) {
+  
+ 
+    /****************************************************
+    Calculations for Wheel Speeds
+    *****************************************************/
+     //Right Wheel  
+    if (!checkOverflows(RIGHT_WHEEL)) 
+       ticks = getCount(RIGHT_WHEEL);                             
+    else 
+       ticks = 0;
+    frequencyR = convertTCNT(ticks);
+    speedR = convertFrequency(frequencyR, RIGHT_WHEEL);  
+    
+    //Left Wheel
+    if (!checkOverflows(LEFT_WHEEL)) 
+       ticks = getCount(LEFT_WHEEL);
+    else 
+       ticks = 0;
+    frequencyL = convertTCNT(ticks);
+    speedL = convertFrequency(frequencyL, LEFT_WHEEL);   
+   /*****************************************************/ 
+
+   /* PID Control Block *********************************/
+   iterationCounter++;
+   
+   if (iterationCounter == 200) {
+    iterationCounter = 0;
+    errorR = SETPOINT - speedR;
+    errorL = SETPOINT - speedL;
+    SetSpeedR = UpdatePID(&PIDControl, errorR, speedR);
+    SetSpeedL = UpdatePID(&PIDControl, errorL, speedL);    
+    PWMDTY4 = 140 - (((900/59)*(SetSpeedR))/10); 
+    PWMDTY5 = 140 - (((900/59)*(SetSpeedL))/10);        
+   }/* PID Control Block END ****************************/  
+
+ 
       counter++;
  
       if (counter == 10000){
@@ -186,7 +251,7 @@ DCinit();
           
       }
         
-      
+     /** Read a command from the RS-232 Port START *************************************/ 
      if(readFlg == TRUE){
            //If new message clear buffer
            if(readChar == '<')
@@ -216,89 +281,84 @@ DCinit();
           readFlg = FALSE; 
           EnableInterrupts;
   
-     } //end of readFLG
+     } /** read a command from the RS-232 Port END **/
      
+     
+     /** Command Parsing START **********************************************************/
      if(CMDRDYflg == 1) {      
        
-         DisableInterrupts;
-         CMDRDYflg = 0;
-         EnableInterrupts;
+     DisableInterrupts;
+     CMDRDYflg = 0;
+     EnableInterrupts;
          
-       switch(inputBuf[0]) 
-       {
-        case('R') :
-          sscanf((const char *)inputBuf, "%s" "%d", discard, &last_servo_value);
-                   
-        
-          break;
+         switch(inputBuf[0]) 
+         {
+          case('R') :
+            sscanf((const char *)inputBuf, "%s" "%d", discard, &last_servo_value);
+                     
+          
+            break;
 
-        case('P'):    
+          case('P'):    
+          
+            /* The +2 to the buffer (char * input) is there to skip
+             * the L and start the copy at the actual string.  
+             */        
+            strcpy(stringArg, (const char *)inputBuf + 2);
+            
+            // stringArg now holds the string to be printed on the LCD
+            LCDclrTOP();
+            LCDcmd(LCD_CURSOR_HOME);
+            LCDprintf(stringArg);
+            
+            break;
         
-          /* The +2 to the buffer (char * input) is there to skip
-           * the L and start the copy at the actual string.  
-           */        
-          strcpy(stringArg, (const char *)inputBuf + 2);
+          case('S'):
+         
+           
+           sscanf((const char *)inputBuf, "%s" "%d", discard, &last_stepper_value);
+        
+        
+            break;      
+
           
-          // stringArg now holds the string to be printed on the LCD
-          LCDclrTOP();
-          LCDcmd(LCD_CURSOR_HOME);
-          LCDprintf(stringArg);
-          
-          break;
-      
-        case('S'):
+          case('U'):  // U is sent when Y button pressed!!! (Y used for DC motor Y-axis)
+            
+            homingHit = 0;
+            
+            stepper_homing();
+            break;
        
+          case('D'):   
+          //arguments[0] = Direction
+          //arguments[1] = % speed
+            sscanf((const char *)inputBuf, "%s" "%d" "%d", discard, 
+            &arguments[0], &arguments[1]);
+            
+            if(arguments[0] == 0)
+              stopDCMotor();
+            else if(arguments[0] == 1){
+              DC_MOTOR_PORT = 0b00001010;
+            } 
+            else{
+              DC_MOTOR_PORT = 0b00000101;
+            }
+            
+            PWMDTY5 = ((-127*(arguments[1]))/100)+127;
+            PWMDTY4 = ((-127*(arguments[1]))/100)+127;
+              
+            break;
+          
+          default:
+            LCDprintCMD("- Error - ");
+       }
+        
+            
+     }  /** Command Parsing END **/ 
          
-         sscanf((const char *)inputBuf, "%s" "%d", discard, &last_stepper_value);
-      
-      
-          break;
-          
-
-        
-        case('A'):
-          
-          homingHit = 0;
-          
-          stepper_homing();
-          break;
-     
-        case('D'):   
-        //arguments[0] = Direction
-        //arguments[1] = % speed
-          sscanf((const char *)inputBuf, "%s" "%d" "%d", discard, 
-          &arguments[0], &arguments[1]);
-          
-          if(arguments[0] == 0)
-            stopDCMotor();
-          else if(arguments[0] == 1){
-            DC_MOTOR_PORT = 0b00001010;
-          } 
-          else{
-            DC_MOTOR_PORT = 0b00000101;
-          }
-          
-          PWMDTY5 = ((-127*(arguments[1]))/100)+127;
-          PWMDTY4 = ((-127*(arguments[1]))/100)+127;
-            
-          break;
-        
-        default:
-          LCDprintCMD("- Error - ");
-     }
-        //This delay is to compensate for linux read
-            /*   for (i = 0 ; i < INT_MAX ; i++)
-                  for (k = 0 ; k < 40 ; k++);
-               //Handshake with linux supervisor
-               for (i = 0 ; i < 6 ;){                       
-                   if ((SCISR1 & SCISR1_TDRE_MASK))
-                      SCIDRL = inputBuf[i++];              
-               }   */
-            
-     }       
- }
+ }  /** Main Application Infinite Loop END **/
   
-}  //main
+}  /* end of main() */
 
 
 

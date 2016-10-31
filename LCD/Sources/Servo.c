@@ -13,7 +13,7 @@ void enableServo(void);
 
 void setupTimerServo (void){
   
-TIE = 0b00000100;     //enable interrupts on channel 2
+TIE |= 0b00000100;     //enable interrupts on channel 2
 TSCR1 = 0b10110000;   //starting Tcount , enabling freeze, and enabling fast clear 
 TSCR2 = 0b00000011;   //setting prescaler to 8 (last 3 bits)
 MAKE_CHNL_OC(2);      //make channel 2 output compare  
@@ -40,7 +40,7 @@ void disableServo(void){
 
 void enableServo(void){
  servoFlg = TRUE;
- setupTimerServo();
+ //setupTimerServo();
  
  FORCE_OC_ACTION_NOW( 2, OC_GO_HI ); //set channel 2, to go high
  EDGE = 0;
@@ -58,27 +58,27 @@ void enableServo(void){
 *
 *****************************************************************/
 interrupt 10 void timerFunction(){
-  
-if(rdg > target)
-  rdg--;
-else if(rdg < target)
-  rdg++;
-
-offsetRDG = (600+(rdg*10));          //change this to *7 when panning motor left to right - leave at *10 for when you want a specific degree
-
-if (EDGE == 1) /* if channel is set to generate rising edge */
-{
-    TC2 += offsetRDG;/* set up timer compare for mark time */
-    /* relative to the last transition */
-    EDGE = 0; /* set pin action to falling edge */             
     
-}
-else
-{
-    TC2 += (20000-offsetRDG);/* set up timer compare for space time */
-    /* relative to the last transition */
-    EDGE = 1; /* set pin action to rising edge */
-}
+  if(rdg > target)
+    rdg--;
+  else if(rdg < target)
+    rdg++;
+
+  offsetRDG = (600+(rdg*10));          //change this to *7 when panning motor left to right - leave at *10 for when you want a specific degree
+
+  if (EDGE == 1) /* if channel is set to generate rising edge */
+  {
+      TC2 += offsetRDG;/* set up timer compare for mark time */
+      /* relative to the last transition */
+      EDGE = 0; /* set pin action to falling edge */             
+      
+  }
+  else
+  {
+      TC2 += (20000-offsetRDG);/* set up timer compare for space time */
+      /* relative to the last transition */
+      EDGE = 1; /* set pin action to rising edge */
+  }
 
 }
   
