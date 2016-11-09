@@ -34,8 +34,8 @@ Entry point: 0xC029 (_Startup)
 _startupData is allocated at 0xC031 and uses 6 Bytes
 extern struct _tagStartup {
   unsigned nofZeroOut     1
-  _Range   pZeroOut       0x900     182
-  _Copy    *toCopyDownBeg 0xD744
+  _Range   pZeroOut       0x900     312
+  _Copy    *toCopyDownBeg 0xD748
 } _startupData;
 
 *********************************************************************************************
@@ -45,11 +45,11 @@ Section Name                    Size  Type     From       To       Segment
 .init                             49     R     0xC000     0xC030   ROM_C000
 .startData                        10     R     0xC031     0xC03A   ROM_C000
 .rodata                          116     R     0xC03B     0xC0AE   ROM_C000
-.rodata1                          91     R     0xC0AF     0xC109   ROM_C000
-.text                           5257     R     0xC10A     0xD592   ROM_C000
-.copy                             30     R     0xD744     0xD761   ROM_C000
+.rodata1                          89     R     0xC0AF     0xC107   ROM_C000
+.text                           5263     R     0xC108     0xD596   ROM_C000
+.copy                             34     R     0xD748     0xD769   ROM_C000
 .stack                           256   R/W      0x800      0x8FF   RAM
-.data                             25   R/W      0x900      0x918   RAM
+.data                             29   R/W      0x900      0x91C   RAM
 .abs_section_8                     1   N/I        0x8        0x8   .absSeg0
 .abs_section_9                     1   N/I        0x9        0x9   .absSeg1
 .abs_section_a                     1   N/I        0xA        0xA   .absSeg2
@@ -277,14 +277,14 @@ Section Name                    Size  Type     From       To       Segment
 .abs_section_ffee                  2     R     0xFFEE     0xFFEF   .absSeg224
 .abs_section_ffec                  2     R     0xFFEC     0xFFED   .absSeg225
 .abs_section_ffde                  2     R     0xFFDE     0xFFDF   .absSeg226
-.bss                              88   R/W      0x919      0x970   RAM
-RUNTIME                          433     R     0xD593     0xD743   ROM_C000
-.common                           69   R/W      0x971      0x9B5   RAM
+.bss                             110   R/W      0x91D      0x98A   RAM
+RUNTIME                          433     R     0xD597     0xD747   ROM_C000
+.common                          173   R/W      0x98B      0xA37   RAM
 .vectSeg227_vect                   2     R     0xFFFE     0xFFFF   .vectSeg227
 
 Summary of section sizes per section type:
-READ_ONLY (R):        1770 (dec:     6000)
-READ_WRITE (R/W):      1B6 (dec:      438)
+READ_ONLY (R):        1778 (dec:     6008)
+READ_WRITE (R/W):      238 (dec:      568)
 NO_INIT (N/I):         104 (dec:      260)
 
 *********************************************************************************************
@@ -482,7 +482,7 @@ MODULE:                 -- mc9s12c32.c.o --
      _RDRAD                                     273       1       1       0   .abs_section_273
      _PERAD                                     274       1       1       0   .abs_section_274
      _PPSAD                                     275       1       1       0   .abs_section_275
-     _PORTAB                                      0       2       2      35   .abs_section_0
+     _PORTAB                                      0       2       2      36   .abs_section_0
      _DDRAB                                       2       2       2       2   .abs_section_2
      _PARTID                                     1A       2       2       0   .abs_section_1a
      _DBGTB                                      22       2       2       0   .abs_section_22
@@ -531,173 +531,180 @@ MODULE:                 -- Start12.c.o --
      __SEG_END_SSTACK                           900       0       0       1               
 MODULE:                 -- CTYPE.C.o (ansisi.lib) --
 - PROCEDURES:
-     isdigit                                   C10A       E      14       1   .text       
-     isspace                                   C118      17      23       5   .text       
-     toupper                                   C12F      14      20       3   .text       
+     isdigit                                   C108       E      14       1   .text       
+     isspace                                   C116      17      23       5   .text       
+     toupper                                   C12D      14      20       3   .text       
 - VARIABLES:
 MODULE:                 -- PRINTF.C.o (ansisi.lib) --
 - PROCEDURES:
-     vprintf                                   C143     478    1144      49   .text       
-     _out                                      C5BB       C      12       9   .text       
-     deposit_char                              C5C7       F      15       1   .text       
-     vsprintf                                  C5D6      29      41       1   .text       
+     vprintf                                   C141     478    1144      49   .text       
+     _out                                      C5B9       C      12       9   .text       
+     deposit_char                              C5C5       F      15       1   .text       
+     vsprintf                                  C5D4      29      41       1   .text       
 - VARIABLES:
      pow10                                     C03B      28      40       4   .rodata     
      pow16                                     C063      20      32       4   .rodata     
      pow8                                      C083      2C      44       4   .rodata     
-     pbuf                                       919       6       6      15   .bss        
+     pbuf                                       91D       6       6      15   .bss        
 MODULE:                 -- SCANF.C.o (ansisi.lib) --
 - PROCEDURES:
-     _getNum                                   C5FF      37      55       1   .text       
-     _copyList                                 C636      B5     181       1   .text       
-     vsscanf                                   C6EB     347     839      50   .text       
-     sscanf                                    CA32      10      16       4   .text       
+     _getNum                                   C5FD      37      55       1   .text       
+     _copyList                                 C634      B5     181       1   .text       
+     vsscanf                                   C6E9     347     839      50   .text       
+     sscanf                                    CA30      10      16       4   .text       
 - VARIABLES:
 MODULE:                 -- STDLIB.C.o (ansisi.lib) --
 - PROCEDURES:
-     CheckCharWithBase                         CA42      39      57       1   .text       
-     _strtoul                                  CA7B     170     368       8   .text       
-     _strtol                                   CBEB      D0     208       4   .text       
-     strtol                                    CCBB      13      19       1   .text       
-     abs                                       CCCE       A      10       1   .text       
+     CheckCharWithBase                         CA40      39      57       1   .text       
+     _strtoul                                  CA79     170     368       8   .text       
+     _strtol                                   CBE9      D0     208       3   .text       
+     abs                                       CCB9       A      10       1   .text       
 - VARIABLES:
 MODULE:                 -- STRING.C.o (ansisi.lib) --
 - PROCEDURES:
-     strcpy                                    CCD8       D      13       1   .text       
+     strcpy                                    CCC3       D      13       1   .text       
 - VARIABLES:
 MODULE:                 -- rtshc12.c.o (ansisi.lib) --
 - PROCEDURES:
-     _LCMP_P                                   D593      15      21       4   RUNTIME     
-     _LNEG                                     D5A8       D      13       3   RUNTIME     
-     _LMULU16x32                               D5B5       F      15       1   RUNTIME     
-     _LMULS16x32                               D5C4      1F      31       2   RUNTIME     
-     _lDivMod                                  D5E3      BE     190       3   RUNTIME     
-     _LDIVU                                    D6A1       E      14       3   RUNTIME     
-     _NEG_P                                    D6AF       F      15       4   RUNTIME     
-     _LDIVS                                    D6BE      35      53       3   RUNTIME     
-     _ILSEXT                                   D6F3       7       7       9   RUNTIME     
-     _CASE_DIRECT_BYTE                         D6FA       5       5       1   RUNTIME     
-     _CASE_CHECKED_BYTE                        D6FF      14      20       2   RUNTIME     
-     _CASE_SEARCH_8                            D713      17      23       3   RUNTIME     
-     _CASE_SEARCH_8_BYTE                       D72A      1A      26       1   RUNTIME     
+     _LCMP_P                                   D597      15      21       4   RUNTIME     
+     _LNEG                                     D5AC       D      13       3   RUNTIME     
+     _LMULU16x32                               D5B9       F      15       1   RUNTIME     
+     _LMULS16x32                               D5C8      1F      31       2   RUNTIME     
+     _lDivMod                                  D5E7      BE     190       3   RUNTIME     
+     _LDIVU                                    D6A5       E      14       3   RUNTIME     
+     _NEG_P                                    D6B3       F      15       4   RUNTIME     
+     _LDIVS                                    D6C2      35      53       3   RUNTIME     
+     _ILSEXT                                   D6F7       7       7       9   RUNTIME     
+     _CASE_DIRECT_BYTE                         D6FE       5       5       1   RUNTIME     
+     _CASE_CHECKED_BYTE                        D703      14      20       2   RUNTIME     
+     _CASE_SEARCH_8                            D717      17      23       3   RUNTIME     
+     _CASE_SEARCH_8_BYTE                       D72E      1A      26       1   RUNTIME     
 - VARIABLES:
-     errno                                      971       2       2       2   .common     
+     errno                                      98B       2       2       2   .common     
 MODULE:                 -- mainRS232.c.o --
 - PROCEDURES:
-     main                                      CCE5     3C5     965      18   .text       
-     SCI_Interrupt                             D0AA      10      16       1   .text       
+     main                                      CCD0     3DE     990      18   .text       
+     SCI_Interrupt                             D0AE      10      16       1   .text       
 - VARIABLES:
-     STRING.F.1                                C0AF       2       2       1   .rodata1    
-     STRING....Hi.I.m.Rob....2                 C0B1      11      17       1   .rodata1    
-     STRING..s.d.3                             C0C2       5       5       1   .rodata1    
-     STRING..s.d.4                             C0C7       5       5       1   .rodata1    
-     STRING..s.d.5                             C0CC       5       5       1   .rodata1    
-     STRING..s.d.6                             C0D1       5       5       1   .rodata1    
-     STRING..s.d.d.7                           C0D6       7       7       1   .rodata1    
-     STRING...Error....8                       C0DD       B      11       1   .rodata1    
+     STRING....Hi.I.m.Rob....1                 C0AF      11      17       1   .rodata1    
+     STRING..s.d.2                             C0C0       5       5       1   .rodata1    
+     STRING..s.d.3                             C0C5       5       5       1   .rodata1    
+     STRING..s.d.4                             C0CA       5       5       1   .rodata1    
+     STRING..s.d.5                             C0CF       5       5       1   .rodata1    
+     STRING..s.d.d.6                           C0D4       7       7       1   .rodata1    
+     STRING...Error....7                       C0DB       B      11       1   .rodata1    
      target                                     900       2       2       4   .data       
      desired_speed                              902       2       2       2   .data       
      turning_percent                            904       2       2       2   .data       
-     readFlg                                    91F       2       2       3   .bss        
-     SETPOINT                                   921       2       2       5   .bss        
-     servoFlg                                   923       2       2       1   .bss        
-     i                                          925       2       2       2   .bss        
-     offset                                     927       2       2       4   .bss        
-     testAtoi                                   929       2       2       1   .bss        
-     SetSpeedR                                  92B       4       4       4   .bss        
-     SetSpeedL                                  92F       4       4       3   .bss        
-     frequencyR                                 933       2       2       1   .bss        
-     frequencyL                                 935       2       2       1   .bss        
-     ticks                                      937       4       4       7   .bss        
-     iterationCounter                           93B       2       2       4   .bss        
-     right_adjust                               93D       2       2       3   .bss        
-     left_adjust                                93F       2       2       3   .bss        
-     errorR                                     941       4       4       3   .bss        
-     errorL                                     945       4       4       3   .bss        
+     last_servo_value                           906       2       2       3   .data       
+     last_stepper_value                         908       2       2       2   .data       
+     readFlg                                    923       2       2       3   .bss        
+     SETPOINT                                   925       2       2       6   .bss        
+     servoFlg                                   927       2       2       1   .bss        
+     i                                          929       2       2       2   .bss        
+     offset                                     92B       2       2       4   .bss        
+     SetSpeedR                                  92D       4       4       4   .bss        
+     SetSpeedL                                  931       4       4       3   .bss        
+     ticks                                      935       4       4       7   .bss        
+     frequencyR                                 939       2       2       1   .bss        
+     frequencyL                                 93B       2       2       1   .bss        
+     iterationCounter                           93D       2       2       3   .bss        
+     right_adjust                               93F       2       2       6   .bss        
+     left_adjust                                941       2       2       7   .bss        
+     errorR                                     943       4       4       3   .bss        
+     errorL                                     947       4       4       3   .bss        
+     speedR                                     94B       2       2       3   .bss        
+     speedL                                     94D       2       2       3   .bss        
+     counter                                    94F       2       2       4   .bss        
+     j                                          951       2       2       2   .bss        
+     CMDRDYflg                                  953       2       2       4   .bss        
+     PIDControl                                 955       E      14       6   .bss        
      _Vector_20                                FFD6       2       2       0   .abs_section_ffd6
-     readChar                                   973       1       1       6   .common     
-     inputBuf                                   974      20      32      11   .common     
-     PIDControl                                 994       E      14       6   .common     
+     readChar                                   98D       1       1       6   .common     
+     inputBuf                                   98E      20      32      11   .common     
+     arguments                                  9AE       8       8       4   .common     
+     stringArg                                  9B6      64     100       2   .common     
+     discard                                    A1A       A      10       5   .common     
 MODULE:                 -- LCD.c.o --
 - PROCEDURES:
-     LCDclrBOT                                 D0BA       E      14       1   .text       
-     LCDclrTOP                                 D0C8       E      14       1   .text       
-     LCDputc                                   D0D6       3       3       1   .text       
-     LCDprintf                                 D0D9      1D      29       5   .text       
-     LCDputs                                   D0F6      37      55       1   .text       
-     LCDprintCMD                               D12D       E      14       2   .text       
-     LCDdata                                   D13B      31      49       1   .text       
-     LCDcmd                                    D16C      31      49      11   .text       
-     LCDinit                                   D19D      58      88       1   .text       
-     LCDclr                                    D1F5       5       5       1   .text       
-     msDelay                                   D1FA      2B      43       2   .text       
+     LCDclrBOT                                 D0BE       E      14       1   .text       
+     LCDclrTOP                                 D0CC       E      14       1   .text       
+     LCDputc                                   D0DA       3       3       1   .text       
+     LCDprintf                                 D0DD      1D      29       5   .text       
+     LCDputs                                   D0FA      37      55       1   .text       
+     LCDprintCMD                               D131       E      14       2   .text       
+     LCDdata                                   D13F      31      49       1   .text       
+     LCDcmd                                    D170      31      49      11   .text       
+     LCDinit                                   D1A1      58      88       1   .text       
+     LCDclr                                    D1F9       5       5       1   .text       
+     msDelay                                   D1FE      2B      43       2   .text       
 - VARIABLES:
-     STRING..................1                 C0E8      11      17       1   .rodata1    
-     STRING..................2                 C0F9      11      17       1   .rodata1    
+     STRING..................1                 C0E6      11      17       1   .rodata1    
+     STRING..................2                 C0F7      11      17       1   .rodata1    
 MODULE:                 -- Servo.c.o --
 - PROCEDURES:
-     setupTimerServo                           D225      35      53       1   .text       
-     enableServo                               D25A      27      39       1   .text       
-     timerFunction                             D281      3F      63       1   .text       
+     setupTimerServo                           D229      35      53       1   .text       
+     enableServo                               D25E      27      39       1   .text       
+     timerFunction                             D285      3F      63       1   .text       
 - VARIABLES:
-     rdg                                        906       2       2       3   .data       
+     rdg                                        90A       2       2       3   .data       
      _Vector_10                                FFEA       2       2       0   .abs_section_ffea
-     TCNTTEMP                                   9A2       2       2       1   .common     
-     DIRECTION                                  9A4       2       2       2   .common     
-     EDGE                                       9A6       2       2       4   .common     
-     offsetRDG                                  9A8       2       2       3   .common     
+     TCNTTEMP                                   A24       2       2       1   .common     
+     DIRECTION                                  A26       2       2       2   .common     
+     EDGE                                       A28       2       2       4   .common     
+     offsetRDG                                  A2A       2       2       3   .common     
 MODULE:                 -- stepper.c.o --
 - PROCEDURES:
-     stepper_INIT                              D2C0      18      24       1   .text       
-     stepper_homing                            D2D8      1C      28       2   .text       
-     RTI_Interrupt                             D2F4      C8     200       1   .text       
+     stepper_INIT                              D2C4      18      24       1   .text       
+     stepper_homing                            D2DC      1C      28       2   .text       
+     RTI_Interrupt                             D2F8      C8     200       1   .text       
 - VARIABLES:
-     RTICTL_INIT                                908       1       1       3   .data       
-     posTable                                   909      10      16       1   .data       
-     STEP_TYPE                                  949       2       2       9   .bss        
-     CUR_PAT                                    94B       2       2       2   .bss        
-     value                                      94D       2       2       2   .bss        
-     checkLIMIT                                 94F       2       2       2   .bss        
-     NUMSTEPS                                   951       2       2       5   .bss        
-     EXPECTED_STEPS                             953       2       2       6   .bss        
-     homingHit                                  955       2       2       6   .bss        
-     stepCount                                  957       2       2       4   .bss        
-     CURRENT_POSITION                           959       2       2       5   .bss        
-     limitFLG.1                                 95B       2       2       4   .bss        
+     RTICTL_INIT                                90C       1       1       3   .data       
+     posTable                                   90D      10      16       1   .data       
+     STEP_TYPE                                  963       2       2       9   .bss        
+     CUR_PAT                                    965       2       2       2   .bss        
+     value                                      967       2       2       2   .bss        
+     checkLIMIT                                 969       2       2       2   .bss        
+     NUMSTEPS                                   96B       2       2       5   .bss        
+     EXPECTED_STEPS                             96D       2       2       6   .bss        
+     homingHit                                  96F       2       2       6   .bss        
+     stepCount                                  971       2       2       4   .bss        
+     CURRENT_POSITION                           973       2       2       5   .bss        
+     limitFLG.1                                 975       2       2       4   .bss        
      _Vector_7                                 FFF0       2       2       0   .abs_section_fff0
 MODULE:                 -- DCmotor.c.o --
 - PROCEDURES:
-     DCinit                                    D3BC      39      57       1   .text       
-     stopDCMotor                               D3F5       5       5       1   .text       
+     DCinit                                    D3C0      39      57       1   .text       
+     stopDCMotor                               D3F9       5       5       1   .text       
 - VARIABLES:
 MODULE:                 -- encoders.c.o --
 - PROCEDURES:
-     encodersInit                              D3FA      34      52       1   .text       
-     UpdatePID                                 D42E      29      41       2   .text       
-     checkOverflows                            D457      1E      30       2   .text       
-     convertTCNT                               D475      16      22       2   .text       
-     convertFrequency                          D48B      55      85       2   .text       
-     getCount                                  D4E0       E      14       1   .text       
-     RightWheel                                D4EE      4A      74       1   .text       
-     LeftWheel                                 D538      4A      74       1   .text       
-     timerOverFlow                             D582      11      17       1   .text       
+     encodersInit                              D3FE      34      52       1   .text       
+     UpdatePID                                 D432      29      41       2   .text       
+     checkOverflows                            D45B      1E      30       2   .text       
+     convertTCNT                               D479      16      22       2   .text       
+     convertFrequency                          D48F      55      85       2   .text       
+     getCount                                  D4E4       E      14       1   .text       
+     RightWheel                                D4F2      4A      74       1   .text       
+     LeftWheel                                 D53C      4A      74       1   .text       
+     timerOverFlow                             D586      11      17       1   .text       
 - VARIABLES:
-     R_Count                                    95D       2       2       6   .bss        
-     L_Count                                    95F       2       2       6   .bss        
-     overflowcountR                             961       2       2       7   .bss        
-     overflowcountL                             963       2       2       7   .bss        
-     periodticksR                               965       2       2       3   .bss        
-     periodticksL                               967       2       2       3   .bss        
-     EdgeL_1                                    969       2       2       4   .bss        
-     EdgeL_2                                    96B       2       2       4   .bss        
-     EdgeR_1                                    96D       2       2       4   .bss        
-     EdgeR_2                                    96F       2       2       4   .bss        
+     R_Count                                    977       2       2       6   .bss        
+     L_Count                                    979       2       2       6   .bss        
+     overflowcountR                             97B       2       2       7   .bss        
+     overflowcountL                             97D       2       2       7   .bss        
+     periodticksR                               97F       2       2       3   .bss        
+     periodticksL                               981       2       2       3   .bss        
+     EdgeL_1                                    983       2       2       4   .bss        
+     EdgeL_2                                    985       2       2       4   .bss        
+     EdgeR_1                                    987       2       2       4   .bss        
+     EdgeR_2                                    989       2       2       4   .bss        
      _Vector_8                                 FFEE       2       2       0   .abs_section_ffee
      _Vector_9                                 FFEC       2       2       0   .abs_section_ffec
      _Vector_16                                FFDE       2       2       0   .abs_section_ffde
-     MotorEncoderShaftSpeed                     9AA       4       4       2   .common     
-     MotorOutputFrequency                       9AE       4       4       3   .common     
-     FinalSpeed                                 9B2       4       4       4   .common     
+     MotorEncoderShaftSpeed                     A2C       4       4       2   .common     
+     MotorOutputFrequency                       A30       4       4       3   .common     
+     FinalSpeed                                 A34       4       4       4   .common     
 
 *********************************************************************************************
 MODULE STATISTIC
@@ -708,44 +715,46 @@ MODULE STATISTIC
   CTYPE.C.o (ansisi.lib)                       0     57      0
   PRINTF.C.o (ansisi.lib)                      6   1212    116
   SCANF.C.o (ansisi.lib)                       0   1091      0
-  STDLIB.C.o (ansisi.lib)                      0    662      0
+  STDLIB.C.o (ansisi.lib)                      0    643      0
   STRING.C.o (ansisi.lib)                      0     13      0
   rtshc12.c.o (ansisi.lib)                     2    433      0
-  mainRS232.c.o                               95    981     59
+  mainRS232.c.o                              225   1006     57
   LCD.c.o                                      0    363     34
   Servo.c.o                                   10    155      2
   stepper.c.o                                 37    252      2
   DCmotor.c.o                                  0     62      0
   encoders.c.o                                32    409      6
-  other                                      256     12     30
+  other                                      256     12     34
 
 *********************************************************************************************
 SECTION USE IN OBJECT-ALLOCATION SECTION
 ---------------------------------------------------------------------------------------------
 SECTION: ".text"
   isdigit isspace toupper vprintf _out deposit_char vsprintf _getNum _copyList 
-  vsscanf sscanf CheckCharWithBase _strtoul _strtol strtol abs strcpy main 
+  vsscanf sscanf CheckCharWithBase _strtoul _strtol abs strcpy main 
   SCI_Interrupt LCDclrBOT LCDclrTOP LCDputc LCDprintf LCDputs LCDprintCMD 
   LCDdata LCDcmd LCDinit LCDclr msDelay setupTimerServo enableServo 
   timerFunction stepper_INIT stepper_homing RTI_Interrupt DCinit stopDCMotor 
   encodersInit UpdatePID checkOverflows convertTCNT convertFrequency getCount 
   RightWheel LeftWheel timerOverFlow 
 SECTION: ".data"
-  target desired_speed turning_percent rdg RTICTL_INIT posTable 
+  target desired_speed turning_percent last_servo_value last_stepper_value rdg 
+  RTICTL_INIT posTable 
 SECTION: ".bss"
-  pbuf readFlg SETPOINT servoFlg i offset testAtoi SetSpeedR SetSpeedL 
-  frequencyR frequencyL ticks iterationCounter right_adjust left_adjust errorR 
-  errorL STEP_TYPE CUR_PAT value checkLIMIT NUMSTEPS EXPECTED_STEPS homingHit 
-  stepCount CURRENT_POSITION limitFLG.1 R_Count L_Count overflowcountR 
-  overflowcountL periodticksR periodticksL EdgeL_1 EdgeL_2 EdgeR_1 EdgeR_2 
+  pbuf readFlg SETPOINT servoFlg i offset SetSpeedR SetSpeedL ticks frequencyR 
+  frequencyL iterationCounter right_adjust left_adjust errorR errorL speedR 
+  speedL counter j CMDRDYflg PIDControl STEP_TYPE CUR_PAT value checkLIMIT 
+  NUMSTEPS EXPECTED_STEPS homingHit stepCount CURRENT_POSITION limitFLG.1 
+  R_Count L_Count overflowcountR overflowcountL periodticksR periodticksL 
+  EdgeL_1 EdgeL_2 EdgeR_1 EdgeR_2 
 SECTION: ".init"
   Init _Startup 
 SECTION: ".rodata"
   pow10 pow16 pow8 
 SECTION: ".rodata1"
-  STRING.F.1 STRING....Hi.I.m.Rob....2 STRING..s.d.3 STRING..s.d.4 
-  STRING..s.d.5 STRING..s.d.6 STRING..s.d.d.7 STRING...Error....8 
-  STRING..................1 STRING..................2 
+  STRING....Hi.I.m.Rob....1 STRING..s.d.2 STRING..s.d.3 STRING..s.d.4 
+  STRING..s.d.5 STRING..s.d.d.6 STRING...Error....7 STRING..................1 
+  STRING..................2 
 SECTION: ".abs_section_8"
   _PORTE 
 SECTION: ".abs_section_9"
@@ -1192,8 +1201,8 @@ SECTION: "RUNTIME"
   _LCMP_P _LNEG _LMULU16x32 _LMULS16x32 _lDivMod _LDIVU _NEG_P _LDIVS _ILSEXT 
   _CASE_DIRECT_BYTE _CASE_CHECKED_BYTE _CASE_SEARCH_8 _CASE_SEARCH_8_BYTE 
 SECTION: ".common"
-  errno readChar inputBuf PIDControl TCNTTEMP DIRECTION EDGE offsetRDG 
-  MotorEncoderShaftSpeed MotorOutputFrequency FinalSpeed 
+  errno readChar inputBuf arguments stringArg discard TCNTTEMP DIRECTION EDGE 
+  offsetRDG MotorEncoderShaftSpeed MotorOutputFrequency FinalSpeed 
 SECTION: ".abs_section_ffd6"
   _Vector_20 
 SECTION: ".abs_section_ffea"
@@ -1211,7 +1220,7 @@ SECTION: ".abs_section_ffde"
 OBJECT LIST SORTED BY ADDRESS
      Name                                      Addr   hSize   dSize     Ref    Section   RLIB
 ---------------------------------------------------------------------------------------------
-     _PORTAB                                      0       2       2      35   .abs_section_0
+     _PORTAB                                      0       2       2      36   .abs_section_0
      _DDRAB                                       2       2       2       2   .abs_section_2
      _PORTE                                       8       1       1       0   .abs_section_8
      _DDRE                                        9       1       1       0   .abs_section_9
@@ -1435,132 +1444,139 @@ OBJECT LIST SORTED BY ADDRESS
      target                                     900       2       2       4   .data       
      desired_speed                              902       2       2       2   .data       
      turning_percent                            904       2       2       2   .data       
-     rdg                                        906       2       2       3   .data       
-     RTICTL_INIT                                908       1       1       3   .data       
-     posTable                                   909      10      16       1   .data       
-     pbuf                                       919       6       6      15   .bss        
-     readFlg                                    91F       2       2       3   .bss        
-     SETPOINT                                   921       2       2       5   .bss        
-     servoFlg                                   923       2       2       1   .bss        
-     i                                          925       2       2       2   .bss        
-     offset                                     927       2       2       4   .bss        
-     testAtoi                                   929       2       2       1   .bss        
-     SetSpeedR                                  92B       4       4       4   .bss        
-     SetSpeedL                                  92F       4       4       3   .bss        
-     frequencyR                                 933       2       2       1   .bss        
-     frequencyL                                 935       2       2       1   .bss        
-     ticks                                      937       4       4       7   .bss        
-     iterationCounter                           93B       2       2       4   .bss        
-     right_adjust                               93D       2       2       3   .bss        
-     left_adjust                                93F       2       2       3   .bss        
-     errorR                                     941       4       4       3   .bss        
-     errorL                                     945       4       4       3   .bss        
-     STEP_TYPE                                  949       2       2       9   .bss        
-     CUR_PAT                                    94B       2       2       2   .bss        
-     value                                      94D       2       2       2   .bss        
-     checkLIMIT                                 94F       2       2       2   .bss        
-     NUMSTEPS                                   951       2       2       5   .bss        
-     EXPECTED_STEPS                             953       2       2       6   .bss        
-     homingHit                                  955       2       2       6   .bss        
-     stepCount                                  957       2       2       4   .bss        
-     CURRENT_POSITION                           959       2       2       5   .bss        
-     limitFLG.1                                 95B       2       2       4   .bss        
-     R_Count                                    95D       2       2       6   .bss        
-     L_Count                                    95F       2       2       6   .bss        
-     overflowcountR                             961       2       2       7   .bss        
-     overflowcountL                             963       2       2       7   .bss        
-     periodticksR                               965       2       2       3   .bss        
-     periodticksL                               967       2       2       3   .bss        
-     EdgeL_1                                    969       2       2       4   .bss        
-     EdgeL_2                                    96B       2       2       4   .bss        
-     EdgeR_1                                    96D       2       2       4   .bss        
-     EdgeR_2                                    96F       2       2       4   .bss        
-     errno                                      971       2       2       2   .common     
-     readChar                                   973       1       1       6   .common     
-     inputBuf                                   974      20      32      11   .common     
-     PIDControl                                 994       E      14       6   .common     
-     TCNTTEMP                                   9A2       2       2       1   .common     
-     DIRECTION                                  9A4       2       2       2   .common     
-     EDGE                                       9A6       2       2       4   .common     
-     offsetRDG                                  9A8       2       2       3   .common     
-     MotorEncoderShaftSpeed                     9AA       4       4       2   .common     
-     MotorOutputFrequency                       9AE       4       4       3   .common     
-     FinalSpeed                                 9B2       4       4       4   .common     
+     last_servo_value                           906       2       2       3   .data       
+     last_stepper_value                         908       2       2       2   .data       
+     rdg                                        90A       2       2       3   .data       
+     RTICTL_INIT                                90C       1       1       3   .data       
+     posTable                                   90D      10      16       1   .data       
+     pbuf                                       91D       6       6      15   .bss        
+     readFlg                                    923       2       2       3   .bss        
+     SETPOINT                                   925       2       2       6   .bss        
+     servoFlg                                   927       2       2       1   .bss        
+     i                                          929       2       2       2   .bss        
+     offset                                     92B       2       2       4   .bss        
+     SetSpeedR                                  92D       4       4       4   .bss        
+     SetSpeedL                                  931       4       4       3   .bss        
+     ticks                                      935       4       4       7   .bss        
+     frequencyR                                 939       2       2       1   .bss        
+     frequencyL                                 93B       2       2       1   .bss        
+     iterationCounter                           93D       2       2       3   .bss        
+     right_adjust                               93F       2       2       6   .bss        
+     left_adjust                                941       2       2       7   .bss        
+     errorR                                     943       4       4       3   .bss        
+     errorL                                     947       4       4       3   .bss        
+     speedR                                     94B       2       2       3   .bss        
+     speedL                                     94D       2       2       3   .bss        
+     counter                                    94F       2       2       4   .bss        
+     j                                          951       2       2       2   .bss        
+     CMDRDYflg                                  953       2       2       4   .bss        
+     PIDControl                                 955       E      14       6   .bss        
+     STEP_TYPE                                  963       2       2       9   .bss        
+     CUR_PAT                                    965       2       2       2   .bss        
+     value                                      967       2       2       2   .bss        
+     checkLIMIT                                 969       2       2       2   .bss        
+     NUMSTEPS                                   96B       2       2       5   .bss        
+     EXPECTED_STEPS                             96D       2       2       6   .bss        
+     homingHit                                  96F       2       2       6   .bss        
+     stepCount                                  971       2       2       4   .bss        
+     CURRENT_POSITION                           973       2       2       5   .bss        
+     limitFLG.1                                 975       2       2       4   .bss        
+     R_Count                                    977       2       2       6   .bss        
+     L_Count                                    979       2       2       6   .bss        
+     overflowcountR                             97B       2       2       7   .bss        
+     overflowcountL                             97D       2       2       7   .bss        
+     periodticksR                               97F       2       2       3   .bss        
+     periodticksL                               981       2       2       3   .bss        
+     EdgeL_1                                    983       2       2       4   .bss        
+     EdgeL_2                                    985       2       2       4   .bss        
+     EdgeR_1                                    987       2       2       4   .bss        
+     EdgeR_2                                    989       2       2       4   .bss        
+     errno                                      98B       2       2       2   .common     
+     readChar                                   98D       1       1       6   .common     
+     inputBuf                                   98E      20      32      11   .common     
+     arguments                                  9AE       8       8       4   .common     
+     stringArg                                  9B6      64     100       2   .common     
+     discard                                    A1A       A      10       5   .common     
+     TCNTTEMP                                   A24       2       2       1   .common     
+     DIRECTION                                  A26       2       2       2   .common     
+     EDGE                                       A28       2       2       4   .common     
+     offsetRDG                                  A2A       2       2       3   .common     
+     MotorEncoderShaftSpeed                     A2C       4       4       2   .common     
+     MotorOutputFrequency                       A30       4       4       3   .common     
+     FinalSpeed                                 A34       4       4       4   .common     
      Init                                      C000      29      41       1   .init       
      _Startup                                  C029       8       8       0   .init       
      pow10                                     C03B      28      40       4   .rodata     
      pow16                                     C063      20      32       4   .rodata     
      pow8                                      C083      2C      44       4   .rodata     
-     STRING.F.1                                C0AF       2       2       1   .rodata1    
-     STRING....Hi.I.m.Rob....2                 C0B1      11      17       1   .rodata1    
-     STRING..s.d.3                             C0C2       5       5       1   .rodata1    
-     STRING..s.d.4                             C0C7       5       5       1   .rodata1    
-     STRING..s.d.5                             C0CC       5       5       1   .rodata1    
-     STRING..s.d.6                             C0D1       5       5       1   .rodata1    
-     STRING..s.d.d.7                           C0D6       7       7       1   .rodata1    
-     STRING...Error....8                       C0DD       B      11       1   .rodata1    
-     STRING..................1                 C0E8      11      17       1   .rodata1    
-     STRING..................2                 C0F9      11      17       1   .rodata1    
-     isdigit                                   C10A       E      14       1   .text       
-     isspace                                   C118      17      23       5   .text       
-     toupper                                   C12F      14      20       3   .text       
-     vprintf                                   C143     478    1144      49   .text       
-     _out                                      C5BB       C      12       9   .text       
-     deposit_char                              C5C7       F      15       1   .text       
-     vsprintf                                  C5D6      29      41       1   .text       
-     _getNum                                   C5FF      37      55       1   .text       
-     _copyList                                 C636      B5     181       1   .text       
-     vsscanf                                   C6EB     347     839      50   .text       
-     sscanf                                    CA32      10      16       4   .text       
-     CheckCharWithBase                         CA42      39      57       1   .text       
-     _strtoul                                  CA7B     170     368       8   .text       
-     _strtol                                   CBEB      D0     208       4   .text       
-     strtol                                    CCBB      13      19       1   .text       
-     abs                                       CCCE       A      10       1   .text       
-     strcpy                                    CCD8       D      13       1   .text       
-     main                                      CCE5     3C5     965      18   .text       
-     SCI_Interrupt                             D0AA      10      16       1   .text       
-     LCDclrBOT                                 D0BA       E      14       1   .text       
-     LCDclrTOP                                 D0C8       E      14       1   .text       
-     LCDputc                                   D0D6       3       3       1   .text       
-     LCDprintf                                 D0D9      1D      29       5   .text       
-     LCDputs                                   D0F6      37      55       1   .text       
-     LCDprintCMD                               D12D       E      14       2   .text       
-     LCDdata                                   D13B      31      49       1   .text       
-     LCDcmd                                    D16C      31      49      11   .text       
-     LCDinit                                   D19D      58      88       1   .text       
-     LCDclr                                    D1F5       5       5       1   .text       
-     msDelay                                   D1FA      2B      43       2   .text       
-     setupTimerServo                           D225      35      53       1   .text       
-     enableServo                               D25A      27      39       1   .text       
-     timerFunction                             D281      3F      63       1   .text       
-     stepper_INIT                              D2C0      18      24       1   .text       
-     stepper_homing                            D2D8      1C      28       2   .text       
-     RTI_Interrupt                             D2F4      C8     200       1   .text       
-     DCinit                                    D3BC      39      57       1   .text       
-     stopDCMotor                               D3F5       5       5       1   .text       
-     encodersInit                              D3FA      34      52       1   .text       
-     UpdatePID                                 D42E      29      41       2   .text       
-     checkOverflows                            D457      1E      30       2   .text       
-     convertTCNT                               D475      16      22       2   .text       
-     convertFrequency                          D48B      55      85       2   .text       
-     getCount                                  D4E0       E      14       1   .text       
-     RightWheel                                D4EE      4A      74       1   .text       
-     LeftWheel                                 D538      4A      74       1   .text       
-     timerOverFlow                             D582      11      17       1   .text       
-     _LCMP_P                                   D593      15      21       4   RUNTIME     
-     _LNEG                                     D5A8       D      13       3   RUNTIME     
-     _LMULU16x32                               D5B5       F      15       1   RUNTIME     
-     _LMULS16x32                               D5C4      1F      31       2   RUNTIME     
-     _lDivMod                                  D5E3      BE     190       3   RUNTIME     
-     _LDIVU                                    D6A1       E      14       3   RUNTIME     
-     _NEG_P                                    D6AF       F      15       4   RUNTIME     
-     _LDIVS                                    D6BE      35      53       3   RUNTIME     
-     _ILSEXT                                   D6F3       7       7       9   RUNTIME     
-     _CASE_DIRECT_BYTE                         D6FA       5       5       1   RUNTIME     
-     _CASE_CHECKED_BYTE                        D6FF      14      20       2   RUNTIME     
-     _CASE_SEARCH_8                            D713      17      23       3   RUNTIME     
-     _CASE_SEARCH_8_BYTE                       D72A      1A      26       1   RUNTIME     
+     STRING....Hi.I.m.Rob....1                 C0AF      11      17       1   .rodata1    
+     STRING..s.d.2                             C0C0       5       5       1   .rodata1    
+     STRING..s.d.3                             C0C5       5       5       1   .rodata1    
+     STRING..s.d.4                             C0CA       5       5       1   .rodata1    
+     STRING..s.d.5                             C0CF       5       5       1   .rodata1    
+     STRING..s.d.d.6                           C0D4       7       7       1   .rodata1    
+     STRING...Error....7                       C0DB       B      11       1   .rodata1    
+     STRING..................1                 C0E6      11      17       1   .rodata1    
+     STRING..................2                 C0F7      11      17       1   .rodata1    
+     isdigit                                   C108       E      14       1   .text       
+     isspace                                   C116      17      23       5   .text       
+     toupper                                   C12D      14      20       3   .text       
+     vprintf                                   C141     478    1144      49   .text       
+     _out                                      C5B9       C      12       9   .text       
+     deposit_char                              C5C5       F      15       1   .text       
+     vsprintf                                  C5D4      29      41       1   .text       
+     _getNum                                   C5FD      37      55       1   .text       
+     _copyList                                 C634      B5     181       1   .text       
+     vsscanf                                   C6E9     347     839      50   .text       
+     sscanf                                    CA30      10      16       4   .text       
+     CheckCharWithBase                         CA40      39      57       1   .text       
+     _strtoul                                  CA79     170     368       8   .text       
+     _strtol                                   CBE9      D0     208       3   .text       
+     abs                                       CCB9       A      10       1   .text       
+     strcpy                                    CCC3       D      13       1   .text       
+     main                                      CCD0     3DE     990      18   .text       
+     SCI_Interrupt                             D0AE      10      16       1   .text       
+     LCDclrBOT                                 D0BE       E      14       1   .text       
+     LCDclrTOP                                 D0CC       E      14       1   .text       
+     LCDputc                                   D0DA       3       3       1   .text       
+     LCDprintf                                 D0DD      1D      29       5   .text       
+     LCDputs                                   D0FA      37      55       1   .text       
+     LCDprintCMD                               D131       E      14       2   .text       
+     LCDdata                                   D13F      31      49       1   .text       
+     LCDcmd                                    D170      31      49      11   .text       
+     LCDinit                                   D1A1      58      88       1   .text       
+     LCDclr                                    D1F9       5       5       1   .text       
+     msDelay                                   D1FE      2B      43       2   .text       
+     setupTimerServo                           D229      35      53       1   .text       
+     enableServo                               D25E      27      39       1   .text       
+     timerFunction                             D285      3F      63       1   .text       
+     stepper_INIT                              D2C4      18      24       1   .text       
+     stepper_homing                            D2DC      1C      28       2   .text       
+     RTI_Interrupt                             D2F8      C8     200       1   .text       
+     DCinit                                    D3C0      39      57       1   .text       
+     stopDCMotor                               D3F9       5       5       1   .text       
+     encodersInit                              D3FE      34      52       1   .text       
+     UpdatePID                                 D432      29      41       2   .text       
+     checkOverflows                            D45B      1E      30       2   .text       
+     convertTCNT                               D479      16      22       2   .text       
+     convertFrequency                          D48F      55      85       2   .text       
+     getCount                                  D4E4       E      14       1   .text       
+     RightWheel                                D4F2      4A      74       1   .text       
+     LeftWheel                                 D53C      4A      74       1   .text       
+     timerOverFlow                             D586      11      17       1   .text       
+     _LCMP_P                                   D597      15      21       4   RUNTIME     
+     _LNEG                                     D5AC       D      13       3   RUNTIME     
+     _LMULU16x32                               D5B9       F      15       1   RUNTIME     
+     _LMULS16x32                               D5C8      1F      31       2   RUNTIME     
+     _lDivMod                                  D5E7      BE     190       3   RUNTIME     
+     _LDIVU                                    D6A5       E      14       3   RUNTIME     
+     _NEG_P                                    D6B3       F      15       4   RUNTIME     
+     _LDIVS                                    D6C2      35      53       3   RUNTIME     
+     _ILSEXT                                   D6F7       7       7       9   RUNTIME     
+     _CASE_DIRECT_BYTE                         D6FE       5       5       1   RUNTIME     
+     _CASE_CHECKED_BYTE                        D703      14      20       2   RUNTIME     
+     _CASE_SEARCH_8                            D717      17      23       3   RUNTIME     
+     _CASE_SEARCH_8_BYTE                       D72E      1A      26       1   RUNTIME     
      _Vector_20                                FFD6       2       2       0   .abs_section_ffd6
      _Vector_16                                FFDE       2       2       0   .abs_section_ffde
      _Vector_10                                FFEA       2       2       0   .abs_section_ffea
@@ -1578,8 +1594,8 @@ CTYPE.C.o (ansisi.lib):
 PRINTF.C.o (ansisi.lib):
   set_printf sprintf 
 STDLIB.C.o (ansisi.lib):
-  atexit getenv system mblen mbtowc wctomb mbstowcs wcstombs strtoul _itoa 
-  bsearch swap qsort div ldiv labs rand srand 
+  atexit getenv system mblen mbtowc wctomb mbstowcs wcstombs strtoul strtol 
+  _itoa bsearch swap qsort div ldiv labs rand srand 
 STRING.C.o (ansisi.lib):
   strerror memchr memcmp memcpy2 memcpy _memcpy_8bitCount memmove memset 
   _memset_clear_8bitCount strlen strset strcat strncat strncpy strcmp strncmp 
@@ -1603,47 +1619,59 @@ STRING.C.o (ansisi.lib):
 rtshc12.c.o (ansisi.lib):
   _PowOfTwo_8 _PowOfTwo_16 _PowOfTwo_32 
 mainRS232.c.o:
-  writeChar DistanceTravelled TCNT_VAR 
+  servo_value k 
 stepper.c.o:
   PATTERN STEP_POSITION DIRECTION_STEPPER 
 
 *********************************************************************************************
 COPYDOWN SECTION
 ---------------------------------------------------------------------------------------------
-------- ROM-ADDRESS: 0xD744 ---- SIZE       4 ---
+------- ROM-ADDRESS: 0xD748 ---- SIZE       4 ---
 Filling bytes inserted
- 00180901
-------- ROM-ADDRESS: 0xD748 ---- RAM-ADDRESS: 0x901 ---- SIZE       1 ---
+ 001C0901
+------- ROM-ADDRESS: 0xD74C ---- RAM-ADDRESS: 0x901 ---- SIZE       1 ---
 Name of initialized Object : target:1
  55
-------- ROM-ADDRESS: 0xD749 ---- SIZE       1 ---
-Filling bytes inserted
- 00
-------- ROM-ADDRESS: 0xD74A ---- RAM-ADDRESS: 0x903 ---- SIZE       1 ---
-Name of initialized Object : desired_speed:1
- 64
-------- ROM-ADDRESS: 0xD74B ---- SIZE       1 ---
-Filling bytes inserted
- 00
-------- ROM-ADDRESS: 0xD74C ---- RAM-ADDRESS: 0x905 ---- SIZE       1 ---
-Name of initialized Object : turning_percent:1
- 64
 ------- ROM-ADDRESS: 0xD74D ---- SIZE       1 ---
 Filling bytes inserted
  00
-------- ROM-ADDRESS: 0xD74E ---- RAM-ADDRESS: 0x907 ---- SIZE       1 ---
-Name of initialized Object : rdg:1
- 55
-------- ROM-ADDRESS: 0xD74F ---- RAM-ADDRESS: 0x908 ---- SIZE       1 ---
-Name of initialized Object : RTICTL_INIT
- 7F
-------- ROM-ADDRESS: 0xD750 ---- SIZE       1 ---
+------- ROM-ADDRESS: 0xD74E ---- RAM-ADDRESS: 0x903 ---- SIZE       1 ---
+Name of initialized Object : desired_speed:1
+ 64
+------- ROM-ADDRESS: 0xD74F ---- SIZE       1 ---
 Filling bytes inserted
  00
-------- ROM-ADDRESS: 0xD751 ---- RAM-ADDRESS: 0x90A ---- SIZE      15 ---
+------- ROM-ADDRESS: 0xD750 ---- RAM-ADDRESS: 0x905 ---- SIZE       1 ---
+Name of initialized Object : turning_percent:1
+ 64
+------- ROM-ADDRESS: 0xD751 ---- SIZE       1 ---
+Filling bytes inserted
+ 00
+------- ROM-ADDRESS: 0xD752 ---- RAM-ADDRESS: 0x907 ---- SIZE       1 ---
+Name of initialized Object : last_servo_value:1
+ 64
+------- ROM-ADDRESS: 0xD753 ---- SIZE       1 ---
+Filling bytes inserted
+ 00
+------- ROM-ADDRESS: 0xD754 ---- RAM-ADDRESS: 0x909 ---- SIZE       1 ---
+Name of initialized Object : last_stepper_value:1
+ 64
+------- ROM-ADDRESS: 0xD755 ---- SIZE       1 ---
+Filling bytes inserted
+ 00
+------- ROM-ADDRESS: 0xD756 ---- RAM-ADDRESS: 0x90B ---- SIZE       1 ---
+Name of initialized Object : rdg:1
+ 55
+------- ROM-ADDRESS: 0xD757 ---- RAM-ADDRESS: 0x90C ---- SIZE       1 ---
+Name of initialized Object : RTICTL_INIT
+ 7F
+------- ROM-ADDRESS: 0xD758 ---- SIZE       1 ---
+Filling bytes inserted
+ 00
+------- ROM-ADDRESS: 0xD759 ---- RAM-ADDRESS: 0x90E ---- SIZE      15 ---
 Name of initialized Object : posTable:1
  08000A0002 0006000400 0500010009
-------- ROM-ADDRESS: 0xD760 ---- SIZE       2 ---
+------- ROM-ADDRESS: 0xD768 ---- SIZE       2 ---
 Filling bytes inserted
  0000
 
@@ -1665,22 +1693,22 @@ CheckCharWithBase         USES toupper
 _strtoul                  USES _strtoul isspace toupper _ILSEXT _LDIVU _LCMP_P 
                                 _LMULS16x32 errno CheckCharWithBase 
 _strtol                   USES _strtol isspace isdigit _strtoul errno _LNEG 
-strtol                    USES _strtol 
-main                      USES _SCIBD _SCICR1 _SCICR2 STRING.F.1 strtol 
-                                testAtoi PIDControl setupTimerServo LCDinit 
-                                stepper_INIT stepper_homing DCinit 
-                                STRING....Hi.I.m.Rob....2 LCDprintf enableServo SETPOINT _PWMDTY45 
+main                      USES _SCIBD _SCICR1 _SCICR2 PIDControl 
+                                setupTimerServo LCDinit stepper_INIT stepper_homing DCinit 
+                                STRING....Hi.I.m.Rob....1 LCDprintf enableServo SETPOINT _PWMDTY45 
                                 _PORTAB encodersInit main iterationCounter 
                                 checkOverflows ticks convertTCNT frequencyR convertFrequency 
-                                frequencyL right_adjust _ILSEXT errorR left_adjust errorL 
-                                UpdatePID SetSpeedR SetSpeedL _LMULS16x32 _LDIVS target 
-                                STEP_TYPE NUMSTEPS EXPECTED_STEPS CURRENT_POSITION 
-                                RTICTL_INIT _RTICTL readFlg readChar inputBuf offset 
-                                LCDclrBOT LCDprintCMD _CASE_SEARCH_8 STRING..s.d.3 
-                                strcpy LCDclrTOP LCDcmd STRING..s.d.4 sscanf 
-                                homingHit desired_speed STRING..s.d.5 turning_percent 
-                                STRING..s.d.6 STRING..s.d.d.7 stopDCMotor i 
-                                STRING...Error....8 getCount 
+                                speedR frequencyL speedL right_adjust left_adjust 
+                                _ILSEXT errorR errorL UpdatePID SetSpeedR SetSpeedL 
+                                _LMULS16x32 _LDIVS counter last_servo_value target 
+                                last_stepper_value STEP_TYPE NUMSTEPS EXPECTED_STEPS 
+                                CURRENT_POSITION RTICTL_INIT _RTICTL readFlg readChar CMDRDYflg 
+                                j inputBuf offset LCDclrBOT LCDprintCMD 
+                                _CASE_SEARCH_8 discard STRING..s.d.2 stringArg strcpy 
+                                LCDclrTOP LCDcmd STRING..s.d.3 sscanf homingHit 
+                                desired_speed STRING..s.d.4 turning_percent STRING..s.d.5 
+                                arguments STRING..s.d.d.6 stopDCMotor i 
+                                STRING...Error....7 getCount 
 SCI_Interrupt             USES _SCISR1 _SCIDRL readChar readFlg 
 LCDclrBOT                 USES LCDcmd STRING..................1 LCDprintf 
 LCDclrTOP                 USES LCDcmd STRING..................2 LCDprintf 
@@ -1737,38 +1765,6 @@ DEPENDENCY TREE
  | 
  +- main                
  |  | 
- |  +- strtol              
- |  |  | 
- |  |  +- _strtol             
- |  |     | 
- |  |     +- isspace             
- |  |     |    
- |  |     +- isdigit             
- |  |     |    
- |  |     +- _strtoul            
- |  |     |  | 
- |  |     |  +- isspace              (see above)
- |  |     |  |  
- |  |     |  +- toupper             
- |  |     |  |    
- |  |     |  +- _ILSEXT             
- |  |     |  |    
- |  |     |  +- _LDIVU              
- |  |     |  |  | 
- |  |     |  |  +- _lDivMod            
- |  |     |  |       
- |  |     |  +- _LCMP_P             
- |  |     |  |    
- |  |     |  +- _LMULS16x32         
- |  |     |  |  | 
- |  |     |  |  +- _LNEG               
- |  |     |  |       
- |  |     |  +- CheckCharWithBase   
- |  |     |     | 
- |  |     |     +- toupper              (see above)
- |  |     |        
- |  |     +- _LNEG                (see above)
- |  |        
  |  +- setupTimerServo     
  |  |    
  |  +- LCDinit             
@@ -1803,12 +1799,12 @@ DEPENDENCY TREE
  |  |  |     |    
  |  |  |     +- _CASE_SEARCH_8      
  |  |  |     |    
- |  |  |     +- _ILSEXT              (see above)
- |  |  |     |  
- |  |  |     +- _LNEG                (see above)
- |  |  |     |  
- |  |  |     +- _LCMP_P              (see above)
- |  |  |        
+ |  |  |     +- _ILSEXT             
+ |  |  |     |    
+ |  |  |     +- _LNEG               
+ |  |  |     |    
+ |  |  |     +- _LCMP_P             
+ |  |  |          
  |  |  +- LCDputs             
  |  |     | 
  |  |     +- LCDcmd               (see above)
@@ -1829,20 +1825,24 @@ DEPENDENCY TREE
  |  |     | 
  |  |     +- _NEG_P              
  |  |     |    
- |  |     +- _lDivMod             (see above)
- |  |        
+ |  |     +- _lDivMod            
+ |  |          
  |  +- convertFrequency    
  |  |  | 
- |  |  +- _LDIVU               (see above)
- |  |  |  
+ |  |  +- _LDIVU              
+ |  |  |  | 
+ |  |  |  +- _lDivMod             (see above)
+ |  |  |     
  |  |  +- _LMULU16x32         
  |  |       
  |  +- _ILSEXT              (see above)
  |  |  
  |  +- UpdatePID           
  |  |    
- |  +- _LMULS16x32          (see above)
- |  |  
+ |  +- _LMULS16x32         
+ |  |  | 
+ |  |  +- _LNEG                (see above)
+ |  |     
  |  +- _LDIVS               (see above)
  |  |  
  |  +- LCDclrBOT           
@@ -1873,8 +1873,8 @@ DEPENDENCY TREE
  |  |  | 
  |  |  +- vsscanf             
  |  |     | 
- |  |     +- isspace              (see above)
- |  |     |  
+ |  |     +- isspace             
+ |  |     |    
  |  |     +- _getNum             
  |  |     |    
  |  |     +- _CASE_SEARCH_8       (see above)
@@ -1885,8 +1885,32 @@ DEPENDENCY TREE
  |  |     |  
  |  |     +- _copyList           
  |  |     |    
- |  |     +- _strtol              (see above)
- |  |        
+ |  |     +- _strtol             
+ |  |        | 
+ |  |        +- isspace              (see above)
+ |  |        |  
+ |  |        +- isdigit             
+ |  |        |    
+ |  |        +- _strtoul            
+ |  |        |  | 
+ |  |        |  +- isspace              (see above)
+ |  |        |  |  
+ |  |        |  +- toupper             
+ |  |        |  |    
+ |  |        |  +- _ILSEXT              (see above)
+ |  |        |  |  
+ |  |        |  +- _LDIVU               (see above)
+ |  |        |  |  
+ |  |        |  +- _LCMP_P              (see above)
+ |  |        |  |  
+ |  |        |  +- _LMULS16x32          (see above)
+ |  |        |  |  
+ |  |        |  +- CheckCharWithBase   
+ |  |        |     | 
+ |  |        |     +- toupper              (see above)
+ |  |        |        
+ |  |        +- _LNEG                (see above)
+ |  |           
  |  +- stopDCMotor         
  |  |    
  |  +- getCount            
@@ -1930,5 +1954,5 @@ STATISTIC SECTION
 ExeFile:
 --------
 Number of blocks to be downloaded: 13
-Total size of all blocks to be downloaded: 6000
+Total size of all blocks to be downloaded: 6008
 

@@ -16,7 +16,6 @@
 #include <string.h>
 #include "encoders.h"
 #include "utils.h"
-//#include <string.h>
 
 /*****************************************************************
 *
@@ -25,16 +24,25 @@
 *****************************************************************/
 volatile int readFlg = FALSE;
 
-//DC Motor Setpoint
+//DC MOTOR
 int SETPOINT = 0;
+#define TURN_ADJ 50
+#define HARD_RIGHT  0b00000110
+#define HARD_LEFT   0b00001001
+#define FORWARD     0b00001010
+#define BACKWARD    0b00000101
 
+//SERIAL SETUP
+//baud clock for 9600 (52 i think?) or 38400 (13) with 8MHz E-clock 
+#define B9600       52
+#define B38400      13
+
+//SERVO MOTOR
 int servoFlg = FALSE;
 volatile int i = 0;
 volatile char readChar;
-volatile char writeChar = 's';
 char inputBuf[32];
 int offset = 0;
-int testAtoi = 0;
 extern rdg;
 int target = 85;
 
@@ -54,11 +62,6 @@ extern int UpdatePID(struct SPid * pid, int error, int position);
 extern int getCounter(void);
 extern unsigned int getCount(int side);
 extern int checkOverflows(int side);
-//extern interrupt 16 void timerOverFlow(void);
-          
-
-//DC MOTOR
-//extern int DC_MOTOR_PORT;
 
 
 /*****************************************************************
@@ -67,8 +70,8 @@ extern int checkOverflows(int side);
 *
 *****************************************************************/
 //LCD FUNCTIONS 
-extern void  setupTimer(void);
-extern void  LCDinit(void);
+extern void setupTimer(void);
+extern void LCDinit(void);
 extern void LCDprintf(char *fmt, ...);
 extern void LCDclr(void);
 extern void LCDcmd(unsigned char data);
@@ -86,93 +89,87 @@ extern void enableServo(void);
 //DC MOTOR FUNCTION
 extern void DCinit(void);
 extern void stopDCMotor(void);
+  
+// ENCODER AND DC MOTOR VARIABLES / / / / / / / / / / / / / / / / / /
+static long SetSpeedR = 0;              /* Setpoints for each motor, PI-adjusted */
+static long SetSpeedL = 0;              
+static unsigned long ticks = 0;         /* Period calculation (in TCNT ticks) */
+static unsigned int frequencyR = 0,     /* Wheel frequency calculations DC motors */
+                    frequencyL = 0;  
+static int iterationCounter = 0;        /* Main loop iteration counter, used to adjust 
+                                           PI calculation frequency             */       
+static int desired_speed = 100;         /* Variable to store last speed sent from the Joystick */
+static int turning_percent = 100;       /* Variable to store last DC turning value from the Joystick */
+static int right_adjust = 0;
+static int left_adjust = 0;              
+static SPid PIDControl;                 /* PI Control structure */  
+static long errorR = 0;                 /* Right DC motor speed error */
+static long errorL = 0;                 /* Left DC motor speed error */
+static signed int speedR = 0;           /* Actual calculated speed of Right DC motor */
+static signed int speedL = 0;           /* Actual calculated speed of Left DC motor */
+
+int servo_value = 90;
+int last_servo_value = 100;
+int last_stepper_value = 100;
+int counter = 0; 
+
+//ENCODER LOCALS
+signed int  arguments[4];               /* Used to store incoming joystick event values */
+unsigned char stringArg[100];           /* Used to store requested string to be printed on LCD */
+unsigned char discard[10];              /* Used to discard unwanted portions of a command when using sprintf */
+int j = 0;
+int k = 0;
+int CMDRDYflg = 0;
+
+
+
+
+
+
+
 /*****************************************************************
 * MAIN()
-* Purpose: INIT AND PROCESS INTERRUPTS 
-* inputs: N/A
-* outputs: N/A 
+* Purpose:  Initialize system modules and service interrupts in 
+*           main application loop 
+* I/P:      N/A
+* O/P:      N/A 
 *
-*****************************************************************/  
-// ENCODER AND DC MOTOR VARIABLES / / / / / / / / / / / / / / / / / /
-static long SetSpeedR = 0;
-static long SetSpeedL = 0;
-
-static int DistanceTravelled = 0;
-static unsigned int frequencyR = 0, frequencyL = 0;
-static unsigned long ticks = 0;
-
-static unsigned long TCNT_VAR = 0; 
-static int iterationCounter = 0;
-
-  
-int desired_speed = 100;
-int turning_percent = 100;
-int right_adjust = 0;
-int left_adjust = 0;
-
-SPid PIDControl;
-
-long errorR = 0;
-long errorL = 0;
-// / / / / / / / / / / / / / / / / / / / / / / / / / / / / / / /
+*****************************************************************/
 void main(void) 
-{
-  int servo_value = 90;
-  int last_servo_value = 100;
-  int last_stepper_value = 100;
-  int counter = 0; 
-
-  //LOCALS
-  signed int  arguments[4];
-  unsigned char stringArg[100];
-  unsigned char discard[10];
-  int j = 0;
-  int k = 0;
-  int CMDRDYflg = 0;
-  
-  signed int speedR = 0; 
-  signed int speedL = 0;
-
-
-
+{     
 
   /******* RS-232 SETUP *********/
-  SCIBD = 13; //baud clock for 9600 (52 i think?) or 38400 (13) with 8MHz E-clock 
-  SCICR1 = 0; //N81 data      
+  SCIBD = B38400; 
+  SCICR1 = 0;       //N81 data      
   // turn on transmitter and receiver
   SCICR2 = (SCICR2_RE_MASK | SCICR2_TE_MASK |SCICR2_RIE_MASK ); //SCICR2_TCIE_MASK);
 
-  testAtoi = atoi("F");
-
-/******* ENCODER SETUP *********/
+  /******* ENCODER SETUP *********/
   PIDControl.pGain = 1;
   PIDControl.iGain = 1;
   PIDControl.iMin = 0;
-  PIDControl.iMax = 59;
+  PIDControl.iMax = 59;  
   
-  
-
-
-/******* SETUPS SERVO **********/
+  /******* SETUPS SERVO **********/
 
   setupTimerServo();
 
-/******* SETUPS LCD **********/
+  /******* SETUPS LCD **********/
   //setupTimer();
   LCDinit();
-/*************************/
+  /*************************/
  
  
-/****** SETUP STEPPER *********/
+  /****** SETUP STEPPER *********/
   stepper_INIT();
   stepper_homing();
 
-/****** SETUP DC MOTOR *********/
+  /****** SETUP DC MOTOR *********/
   DCinit();         
 
   LCDprintf("-- Hi I'm Rob --");
   
-/****** SETUP ENCODERS ********/
+  /****** SETUP ENCODERS ********/
 
   
   enableServo();
@@ -216,6 +213,10 @@ void main(void)
 
    
     iterationCounter = 0;
+    
+    if (right_adjust > 0) left_adjust = 0;
+    if (left_adjust > 0) right_adjust = 0;
+    
     errorR = (SETPOINT - right_adjust) - speedR;
     errorL = (SETPOINT - left_adjust) - speedL;
     SetSpeedR = UpdatePID(&PIDControl, errorR, speedR);
@@ -340,13 +341,25 @@ void main(void)
           case('Y'):
             sscanf((const char *)inputBuf, "%s" "%d", discard, &desired_speed);
             
-            if (desired_speed > 100){           // FORWARD
-              DC_MOTOR_PORT = 0b00001010;
-              SETPOINT = ((desired_speed - 100)*59)/100;
+            if (desired_speed > 100){           // FORWARD                           
+              DC_MOTOR_PORT = FORWARD;
+              if (left_adjust || right_adjust)
+                SETPOINT = 59;
+              else
+                SETPOINT = ((desired_speed - 100)*59)/100;
             }
-            else if (desired_speed < 100) {     // BACKWARD
-              DC_MOTOR_PORT = 0b00000101;
-              SETPOINT = (((desired_speed - 100)*59)/100)*-1;
+            else if (desired_speed < 100) {     // BACKWARD                
+              if (right_adjust){
+                DC_MOTOR_PORT = HARD_RIGHT;
+                SETPOINT = 59;
+              } else if (left_adjust) {
+                DC_MOTOR_PORT = HARD_LEFT;
+                SETPOINT = 59;
+              }
+              else {
+                DC_MOTOR_PORT = BACKWARD;
+                SETPOINT = (((desired_speed - 100)*59)/100)*-1;
+              }
             }        
             
             break;
@@ -356,10 +369,10 @@ void main(void)
             sscanf((const char *)inputBuf, "%s" "%d", discard, &turning_percent);              
             
             if (turning_percent > 100){           // FORWARD
-              right_adjust = ((turning_percent - 100)*59)/100;
+              right_adjust = TURN_ADJ;
             }
             else if (turning_percent < 100) {     // BACKWARD
-              left_adjust = (((turning_percent - 100)*59)/100)*-1;
+              left_adjust = TURN_ADJ;
             } 
             else if (turning_percent == 100) {
               left_adjust = 0;
